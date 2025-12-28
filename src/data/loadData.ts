@@ -174,11 +174,13 @@ async function loadLocalFiles(): Promise<{ sync?: any; data?: ProjectData }> {
     // Use fetch instead of import to avoid build-time errors if files don't exist
     // Try multiple possible paths (with and without base path)
     const possibleSyncPaths = [
+      '/xp-map/dashboard-sync.json',
       '/dashboard-sync.json',
       './dashboard-sync.json',
       '../dashboard-sync.json'
     ];
     const possibleDataPaths = [
+      '/xp-map/data/data.json',
       '/data/data.json',
       './data/data.json',
       '../data/data.json'
