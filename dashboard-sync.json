@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-12-28T04:20:30.629Z",
+    "description": "קובץ מרכזי לסינכרון בין הפרויקט לדשבורד. Cursor מעדכן את הקובץ הזה, script דוחף לדשבורד.",
+    "syncScript": "node dashboard-sync/sync-to-dashboard.cjs"
+  },
+  "project": {
+    "name": "OZ – Design-Time Accessibility Assistant",
+    "mvp": "Text Field – E2E",
+    "repo": "github.com/haimXseb/figma-oz",
+    "currentPhase": "phase3",
+    "currentGoal": "MVP Brain + Visibility tooling + Protocol Safety",
+    "buildCommand": "npm run build",
+    "scope": "Text Field בלבד"
+  },
+  "status": {
+    "blockers": [],
+    "lastContextDump": "2025-12-28T02:31:04.006Z",
+    "buildStatus": "success",
+    "lastBuild": "2025-12-28T04:20:30.631Z",
+    "workingTree": "dirty",
+    "branch": "main",
+    "ahead": 0,
+    "behind": 0
+  },
+  "progress": {
+    "masterPlan": {
+      "total": 3,
+      "completed": 0,
+      "percentage": 0
+    },
+    "rules": {
+      "total": 25,
+      "implemented": 0,
+      "percentage": 0
+    },
+    "pipeline": {
+      "total": 0,
+      "completed": 0,
+      "percentage": 0
+    }
+  },
+  "gates": {
+    "local": {
+      "confidence": 0.85,
+      "structural": 0.35
+    },
+    "vision": {
+      "enabledByDefault": false,
+      "role": "Optional"
+    }
+  },
+  "recentUpdates": [
+    {
+      "timestamp": "2025-12-28T10:30:00Z",
+      "type": "dashboard_merged",
+      "message": "HomeTab ו-DashboardScreen מוזגו לעמוד אחד עם padding, hover states, אנימציות ונוטיפיקציות",
+      "files": [
+        "dashboard/src/components/HomeTab.tsx",
+        "dashboard/src/components/Toast.tsx",
+        "dashboard/src/hooks/useToast.ts"
+      ]
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-001",
+      "type": "info",
+      "title": "דשבורד מוכן",
+      "message": "הדשבורד זמין ב-GitHub Pages עם כל התכונות החדשות",
+      "timestamp": "2025-12-28T10:30:00Z",
+      "read": false
+    }
+  ],
+  "uiStates": {
+    "idle": "IDLE",
+    "identifying": "IDENTIFYING",
+    "needsConfirmation": "NEEDS_CONFIRMATION",
+    "identified": "IDENTIFIED",
+    "planReady": "PLAN_READY",
+    "executing": "EXECUTING",
+    "done": "DONE"
+  }
+}
