@@ -217,18 +217,18 @@ function ProjectTreeScreen({ data }: { data: ProjectData }) {
 
           <GlassCard>
             <CardHeader>
-              <CardTitle className="text-base">Quick ops</CardTitle>
+              <CardTitle className="text-base">פעולות מהירות</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-2">
               <div className="rounded-[22px] border border-white/20 bg-white/25 p-3 backdrop-blur-xl dark:bg-white/7 dark:border-white/10">
-                <div className="text-sm font-medium">Build</div>
+                <div className="text-sm font-medium">בנייה</div>
                 <div className="mt-1 flex items-center justify-between gap-3">
                   <div className="font-mono text-xs text-muted-foreground">{data.build.command}</div>
                   <CopyButton text={data.build.command} />
                 </div>
               </div>
               <div className="rounded-[22px] border border-white/20 bg-white/25 p-3 backdrop-blur-xl dark:bg-white/7 dark:border-white/10">
-                <div className="text-sm font-medium">Repo</div>
+                <div className="text-sm font-medium">מאגר</div>
                 <div className="mt-1 flex items-center justify-between gap-3">
                   <div className="font-mono text-xs text-muted-foreground">{data.meta.repo}</div>
                   <CopyButton text={data.meta.repo} />
@@ -281,7 +281,7 @@ export default function App() {
           </div>
           <div className="flex items-center gap-2">
             <SoftBadge variant="outline">MVP: {data.meta.mvp}</SoftBadge>
-            <SoftBadge>Updated: {data.meta.updated}</SoftBadge>
+            <SoftBadge>עודכן: {data.meta.updated}</SoftBadge>
           </div>
         </div>
 

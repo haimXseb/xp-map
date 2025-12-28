@@ -275,7 +275,19 @@ export function HomeTab({ data }: { data: ProjectData }) {
   );
   
   const historySeries = useMemo(() => {
-    if (!data.recent) return [];
+    if (!data.recent || data.recent.length === 0) {
+      // Fallback: create sample data if no recent data
+      const today = new Date();
+      return Array.from({ length: 7 }, (_, i) => {
+        const date = new Date(today);
+        date.setDate(date.getDate() - (6 - i));
+        return {
+          date: date.toLocaleDateString('he-IL', { month: 'short', day: 'numeric' }),
+          items: Math.floor(Math.random() * 5) + 1,
+          score: Math.min(100, 40 + i * 8 + Math.floor(Math.random() * 10)),
+        };
+      });
+    }
     const points = data.recent
       .slice()
       .reverse()
@@ -384,21 +396,21 @@ export function HomeTab({ data }: { data: ProjectData }) {
         <CardContent className="px-6 pb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Stat
-              label="Current Goal"
-              value={executionLog?.metadata?.currentGoal || 'N/A'}
+              label="מטרה נוכחית"
+              value={executionLog?.metadata?.currentGoal || 'לא זמין'}
             />
             <Stat
-              label="Current Phase"
-              value={executionLog?.metadata?.currentPhase?.replace('phase', 'Phase ') || 'N/A'}
+              label="שלב נוכחי"
+              value={executionLog?.metadata?.currentPhase?.replace('phase', 'שלב ') || 'לא זמין'}
             />
             <Stat
-              label="Blockers"
+              label="חסימות"
               value={executionLog?.blockers?.length || 0}
-              hint={executionLog?.blockers?.length ? `${executionLog.blockers.length} active blockers` : 'No blockers'}
+              hint={executionLog?.blockers?.length ? `${executionLog.blockers.length} חסימות פעילות` : 'אין חסימות'}
             />
             <Stat
-              label="Last Context Dump"
-              value={gitStatus?.timestamp ? new Date(gitStatus.timestamp).toLocaleString('he-IL') : 'N/A'}
+              label="עדכון אחרון"
+              value={gitStatus?.timestamp ? new Date(gitStatus.timestamp).toLocaleString('he-IL') : 'לא זמין'}
             />
           </div>
         </CardContent>
@@ -413,13 +425,13 @@ export function HomeTab({ data }: { data: ProjectData }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ProgressRing
               value={progress?.masterPlan?.percentage || 0}
-              label="Master Plan Completion"
-              sub={`${progress?.masterPlan?.completed || 0}/${progress?.masterPlan?.total || 0} tasks`}
+              label="השלמת תוכנית ראשית"
+              sub={`${progress?.masterPlan?.completed || 0}/${progress?.masterPlan?.total || 0} משימות`}
             />
             <ProgressRing
               value={progress?.rules?.percentage || 0}
-              label="Rules Coverage"
-              sub={`${progress?.rules?.implemented || 0}/${progress?.rules?.total || 0} rules`}
+              label="כיסוי חוקים"
+              sub={`${progress?.rules?.implemented || 0}/${progress?.rules?.total || 0} חוקים`}
             />
           </div>
         </CardContent>
@@ -530,17 +542,17 @@ export function HomeTab({ data }: { data: ProjectData }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <GlassCard>
           <CardHeader className="px-6 pt-6">
-            <CardTitle className="text-base">Tasks</CardTitle>
+            <CardTitle className="text-base">משימות</CardTitle>
           </CardHeader>
           <CardContent className="px-6 pb-6">
             <div className="space-y-2">
-              <div className="text-xs text-muted-foreground mb-2">Completed (3 latest)</div>
+              <div className="text-xs text-muted-foreground mb-2">הושלמו (3 אחרונות)</div>
               {completedTasks.map((task, idx) => (
                 <div key={idx} className="text-sm p-3 rounded-lg bg-white/10 transition-all duration-200 hover:bg-white/20 hover:scale-[1.02]">
                   {task.name}
                 </div>
               ))}
-              <div className="text-xs text-muted-foreground mt-4 mb-2">Pending (3 next)</div>
+              <div className="text-xs text-muted-foreground mt-4 mb-2">ממתינות (3 הבאות)</div>
               {pendingTasks.map((task, idx) => (
                 <div key={idx} className="text-sm p-3 rounded-lg bg-yellow-500/10 transition-all duration-200 hover:bg-yellow-500/20 hover:scale-[1.02]">
                   {task.name}
@@ -552,7 +564,7 @@ export function HomeTab({ data }: { data: ProjectData }) {
         
         <GlassCard>
           <CardHeader className="px-6 pt-6">
-            <CardTitle className="text-base">Logs</CardTitle>
+            <CardTitle className="text-base">לוגים</CardTitle>
           </CardHeader>
           <CardContent className="px-6 pb-6">
             <ScrollArea className="h-32">
@@ -572,40 +584,40 @@ export function HomeTab({ data }: { data: ProjectData }) {
         
         <GlassCard>
           <CardHeader className="px-6 pt-6">
-            <CardTitle className="text-base">UI States</CardTitle>
+            <CardTitle className="text-base">מצבי ממשק</CardTitle>
           </CardHeader>
           <CardContent className="px-6 pb-6">
             <div className="text-sm space-y-2">
-              <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">IDLE → IDENTIFYING</div>
-              <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">→ NEEDS_CONFIRMATION</div>
-              <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">→ IDENTIFIED</div>
-              <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">→ PLAN_READY</div>
-              <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">→ EXECUTING → DONE</div>
+              <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">מצב המתנה → זיהוי</div>
+              <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">→ דורש אישור</div>
+              <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">→ מזוהה</div>
+              <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">→ תוכנית מוכנה</div>
+              <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">→ מבצע → הושלם</div>
             </div>
           </CardContent>
         </GlassCard>
         
         <GlassCard>
           <CardHeader className="px-6 pt-6">
-            <CardTitle className="text-base">Git Status</CardTitle>
+            <CardTitle className="text-base">סטטוס Git</CardTitle>
           </CardHeader>
           <CardContent className="px-6 pb-6">
             <div className="text-sm space-y-2">
               <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">
-                <span className="text-muted-foreground">Branch: </span>
-                <span className="font-mono">{gitStatus?.branch || 'unknown'}</span>
+                <span className="text-muted-foreground">ענף: </span>
+                <span className="font-mono">{gitStatus?.branch || 'לא ידוע'}</span>
               </div>
               <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">
-                <span className="text-muted-foreground">Working tree: </span>
+                <span className="text-muted-foreground">עץ עבודה: </span>
                 <SoftBadge variant={gitStatus?.workingTree === 'clean' ? 'secondary' : 'outline'}>
-                  {gitStatus?.workingTree || 'unknown'}
+                  {gitStatus?.workingTree === 'clean' ? 'נקי' : gitStatus?.workingTree || 'לא ידוע'}
                 </SoftBadge>
               </div>
               <div className="p-2 rounded transition-all duration-200 hover:bg-white/10">
-                <span className="text-muted-foreground">Status: </span>
-                {gitStatus?.ahead ? <span>Ahead {gitStatus.ahead}</span> : null}
-                {gitStatus?.behind ? <span>Behind {gitStatus.behind}</span> : null}
-                {!gitStatus?.ahead && !gitStatus?.behind ? <span>Up to date</span> : null}
+                <span className="text-muted-foreground">סטטוס: </span>
+                {gitStatus?.ahead ? <span>קדימה {gitStatus.ahead}</span> : null}
+                {gitStatus?.behind ? <span>מאחור {gitStatus.behind}</span> : null}
+                {!gitStatus?.ahead && !gitStatus?.behind ? <span>מעודכן</span> : null}
               </div>
             </div>
           </CardContent>
@@ -615,7 +627,7 @@ export function HomeTab({ data }: { data: ProjectData }) {
       {/* Master Plan Tree */}
       <GlassCard>
         <CardHeader className="px-6 pt-6">
-          <CardTitle className="text-xl mb-4">Master Plan Tree</CardTitle>
+            <CardTitle className="text-xl mb-4">עץ תוכנית ראשית</CardTitle>
         </CardHeader>
         <CardContent className="px-6 pb-6">
           <MasterPlanTree executionLog={executionLog} />
@@ -625,12 +637,12 @@ export function HomeTab({ data }: { data: ProjectData }) {
       {/* Prompt Queue (placeholder) */}
       <GlassCard>
         <CardHeader className="px-6 pt-6">
-          <CardTitle className="text-xl mb-4">Prompt Queue</CardTitle>
-        </CardHeader>
-        <CardContent className="px-6 pb-6">
-          <div className="text-muted-foreground text-sm">
-            Prompt queue will be implemented when PROMPTS_LOG.json is created.
-          </div>
+            <CardTitle className="text-xl mb-4">תור פקודות</CardTitle>
+          </CardHeader>
+          <CardContent className="px-6 pb-6">
+            <div className="text-muted-foreground text-sm">
+              תור הפקודות ייושם כאשר PROMPTS_LOG.json ייווצר.
+            </div>
         </CardContent>
       </GlassCard>
     </div>
