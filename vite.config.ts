@@ -10,9 +10,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // Base path for GitHub Pages: /xp-map/dashboard/
+  // Base path for GitHub Pages: /xp-map/
   // For local dev/preview, Vite handles this automatically
-  base: '/xp-map/dashboard/',
+  base: '/xp-map/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
