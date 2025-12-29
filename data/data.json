@@ -345,13 +345,20 @@
     "workingTree": "dirty",
     "modifiedFiles": [
       ".tmp-xp-map",
+      "CONTEXT_DUMP.txt",
       "FILES_TREE.md",
+      "PROJECT_TREE.md",
+      "dashboard-sync/dashboard-sync.json",
+      "dashboard/data.json",
+      "docs/GIT_STATUS.json",
       "docs/mvp-rule-pack-LOCKED-local.docx",
       "docs/mvp-rule-pack-LOCKED-local.docx.backup",
       "docs/mvp-rule-pack-LOCKED.docx",
       "package.json",
       "src/code.ts",
+      "src/ui-inline.ts",
       "ui/ui.html",
+      ".tmp.driveupload/",
       "FULL_CODEBASE.txt",
       "Users/",
       "docs/mvp-rule-pack-LOCKED.docx.backup",
@@ -361,7 +368,7 @@
     "behind": 0,
     "lastCommit": "2025-12-29 00:37:38 +0200",
     "lastPush": "2025-12-29 00:37:38 +0200",
-    "timestamp": "2025-12-29T23:26:16.633Z"
+    "timestamp": "2025-12-29T23:33:47.892Z"
   },
   "progress": {
     "masterPlan": {
