@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "1.0",
-    "lastUpdated": "2025-12-29T23:33:57.534Z",
+    "lastUpdated": "2025-12-29T23:56:51.619Z",
     "description": "קובץ מרכזי לסינכרון בין הפרויקט לדשבורד. Cursor מעדכן את הקובץ הזה, script דוחף לדשבורד.",
     "syncScript": "node dashboard-sync/sync-to-dashboard.cjs"
   },
@@ -10,7 +10,7 @@
     "mvp": "Text Field – E2E",
     "repo": "github.com/haimXseb/figma-oz",
     "currentPhase": "phase4",
-    "currentGoal": "Wiring - Rule checks integrated into orchestrator, ready for verification",
+    "currentGoal": "Wiring - Rule checks integrated into orchestrator, classification engine tuned, handoff UI complete, ready for verification",
     "buildCommand": "npm run build",
     "scope": "Text Field בלבד"
   },
@@ -18,7 +18,7 @@
     "blockers": [],
     "lastContextDump": "2025-12-29T23:33:47.892Z",
     "buildStatus": "success",
-    "lastBuild": "2025-12-29T23:33:57.535Z",
+    "lastBuild": "2025-12-29T23:56:51.620Z",
     "workingTree": "dirty",
     "branch": "main",
     "ahead": 0,
@@ -52,6 +52,15 @@
     }
   },
   "recentUpdates": [
+    {
+      "timestamp": "2025-12-29T23:45:00Z",
+      "type": "fix",
+      "message": "Classification Engine Tuning: Adjusted weights to prevent false-positive Buttons. Fixed UI rendering bug (detailsList scope).",
+      "files": [
+        "src/code.ts",
+        "ui/ui.html"
+      ]
+    },
     {
       "timestamp": "2025-12-28T10:30:00Z",
       "type": "dashboard_merged",
