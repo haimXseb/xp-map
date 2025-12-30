@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "1.0",
-    "lastUpdated": "2025-12-29T23:57:31.089Z",
+    "lastUpdated": "2025-12-30T00:10:53.398Z",
     "description": "קובץ מרכזי לסינכרון בין הפרויקט לדשבורד. Cursor מעדכן את הקובץ הזה, script דוחף לדשבורד.",
     "syncScript": "node dashboard-sync/sync-to-dashboard.cjs"
   },
@@ -18,7 +18,7 @@
     "blockers": [],
     "lastContextDump": "2025-12-29T23:33:47.892Z",
     "buildStatus": "success",
-    "lastBuild": "2025-12-29T23:57:31.090Z",
+    "lastBuild": "2025-12-30T00:10:53.399Z",
     "workingTree": "dirty",
     "branch": "main",
     "ahead": 0,
@@ -52,6 +52,12 @@
     }
   },
   "recentUpdates": [
+    {
+      "timestamp": "2025-12-30T00:10:33.000Z",
+      "type": "fix",
+      "message": "CONNECTION TEST [00:10]: Verifying fix for data fetching source.",
+      "files": []
+    },
     {
       "timestamp": "2025-12-29T23:45:00Z",
       "type": "fix",
