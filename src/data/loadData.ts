@@ -1,5 +1,5 @@
 /**
- * Data loading from figma-oz repo
+ * Data loading from xp-map repo
  * 
  * Strategy: 
  * 1. Try to fetch from GitHub API (always up-to-date)
@@ -7,7 +7,7 @@
  * 3. Fallback to default data
  */
 
-const FIGMA_OZ_REPO = 'haimXseb/figma-oz';
+const XP_MAP_REPO = 'haimXseb/xp-map';
 const BRANCH = 'main';
 
 export interface ExecutionLog {
@@ -160,7 +160,7 @@ export interface ProjectData {
 let cachedData: ProjectData | null = null;
 
 async function fetchFromGitHub(path: string): Promise<any> {
-  const url = `https://raw.githubusercontent.com/${FIGMA_OZ_REPO}/${BRANCH}/${path}`;
+  const url = `https://raw.githubusercontent.com/${XP_MAP_REPO}/${BRANCH}/${path}`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Failed to fetch ${path}: ${response.statusText}`);
@@ -237,8 +237,8 @@ export async function loadProjectData(): Promise<ProjectData> {
   try {
     console.log('📡 Fetching data from GitHub API...');
     const [syncData, fullData] = await Promise.all([
-      fetchFromGitHub('dashboard-sync/dashboard-sync.json'),
-      fetchFromGitHub('dashboard/data.json')
+      fetchFromGitHub('dashboard-sync.json'),
+      fetchFromGitHub('data/data.json')
     ]);
     
     // Merge sync data into full data
@@ -296,7 +296,7 @@ function getDefaultData(): ProjectData {
       name: "OZ – Design-Time Accessibility Assistant",
       updated: new Date().toISOString().split('T')[0],
       mvp: "Text Field – E2E",
-      repo: "github.com/haimXseb/figma-oz",
+      repo: "github.com/haimXseb/xp-map",
     },
     truth: {
       note: "Source of truth: Foundations + MVP rule pack. שאר המסמכים תומכים בלבד.",
