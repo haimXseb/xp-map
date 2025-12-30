@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "1.0",
-    "lastUpdated": "2025-12-30T00:56:55.744Z",
+    "lastUpdated": "2025-12-30T01:05:27.988Z",
     "description": "קובץ מרכזי לסינכרון בין הפרויקט לדשבורד. Cursor מעדכן את הקובץ הזה, script דוחף לדשבורד.",
     "syncScript": "node dashboard-sync/sync-to-dashboard.cjs"
   },
@@ -10,7 +10,7 @@
     "mvp": "Text Field – E2E",
     "repo": "github.com/haimXseb/figma-oz",
     "currentPhase": "phase4",
-    "currentGoal": "Wiring - Rule checks integrated into orchestrator, classification engine tuned, handoff UI complete, ready for verification",
+    "currentGoal": "Wiring - Fixing engine wired: Rules connected to orchestrator, Plan View implemented, Autofix triggered from UI",
     "buildCommand": "npm run build",
     "scope": "Text Field בלבד"
   },
@@ -18,7 +18,7 @@
     "blockers": [],
     "lastContextDump": "2025-12-30T00:56:45.628Z",
     "buildStatus": "success",
-    "lastBuild": "2025-12-30T00:56:55.745Z",
+    "lastBuild": "2025-12-30T01:05:27.989Z",
     "workingTree": "dirty",
     "branch": "main",
     "ahead": 0,
@@ -52,6 +52,15 @@
     }
   },
   "recentUpdates": [
+    {
+      "timestamp": "2025-12-30T01:00:00Z",
+      "type": "feature",
+      "message": "Fixing Engine Wired: Rules connected to orchestrator (checks array), Plan View implemented (accessibility issues display, autofix toggles, dev handoff), 'Apply Selected Fixes' button triggers handleAutofix",
+      "files": [
+        "src/code.ts",
+        "ui/ui.html"
+      ]
+    },
     {
       "timestamp": "2025-12-30T00:10:33.000Z",
       "type": "fix",
