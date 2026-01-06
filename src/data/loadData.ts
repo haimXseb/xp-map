@@ -173,17 +173,17 @@ async function loadLocalFiles(): Promise<{ sync?: any; data?: ProjectData }> {
     // Try to load from local files (if they exist from sync)
     // Use fetch instead of import to avoid build-time errors if files don't exist
     // Try multiple possible paths (with and without base path)
+    // Note: Vite copies public/ to dist/ during build, so these files are available at runtime
+    // Base path is /xp-map/, so paths should account for that
     const possibleSyncPaths = [
-      '/xp-map/dashboard-sync.json',
-      '/dashboard-sync.json',
-      './dashboard-sync.json',
-      '../dashboard-sync.json'
+      '/xp-map/dashboard-sync.json',  // GitHub Pages with base path
+      '/dashboard-sync.json',          // GitHub Pages without base path (fallback)
+      './dashboard-sync.json'          // Relative path (works in both cases)
     ];
     const possibleDataPaths = [
-      '/xp-map/data/data.json',
-      '/data/data.json',
-      './data/data.json',
-      '../data/data.json'
+      '/xp-map/data/data.json',       // GitHub Pages with base path
+      '/data/data.json',               // GitHub Pages without base path (fallback)
+      './data/data.json'               // Relative path (works in both cases)
     ];
     
     // Try all possible paths for sync file

@@ -31,6 +31,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
+      - name: Sync data files to public/
+        run: |
+          # Ensure public/ directory exists
+          mkdir -p public/data
+          # Copy source-of-truth files to public/ (Vite will copy them to dist/)
+          cp dashboard-sync.json public/dashboard-sync.json || echo "Warning: dashboard-sync.json not found"
+          cp data/data.json public/data/data.json || echo "Warning: data/data.json not found"
+      
       - name: Build
         run: npm run build
       
