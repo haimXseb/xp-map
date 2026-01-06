@@ -1,19 +1,55 @@
 {
   "meta": {
     "name": "OZ – Design-Time Accessibility Assistant",
-    "updated": "2025-12-29",
+    "updated": "2026-01-06",
     "mvp": "Text Field – E2E",
     "repo": "github.com/1haim/figma-oz"
   },
   "executionLog": {
     "metadata": {
       "version": "1.0",
-      "lastUpdated": "2026-01-06T01:49:26.300Z",
-      "currentPhase": "Phase 2 Complete",
+      "lastUpdated": "2026-01-06T01:10:00Z",
+      "currentPhase": "Phase 3.2: Ambiguity Handling + Tie-Breakers",
       "currentGoal": "Phase 3: Ambiguity Handling + Selection Normalization + Rollout to 10 Components"
     },
     "blockers": [],
     "phases": [
+      {
+        "id": "phase1_local_first",
+        "name": "Local-First Engine Upgrade",
+        "epics": [
+          {
+            "id": "local-first-textfield",
+            "name": "TextField Local-First Implementation",
+            "status": "done",
+            "owner": "Cursor",
+            "evidence": "src/rules/textField.ts, src/rules/utils.ts, src/code.ts",
+            "tasks": [
+              {
+                "id": "lf-utils",
+                "name": "Deep Tree Signal Extraction (Utils)",
+                "status": "done",
+                "owner": "Cursor",
+                "evidence": "src/rules/utils.ts"
+              },
+              {
+                "id": "lf-textfield",
+                "name": "Refactor TextField to use NodeSignals",
+                "status": "done",
+                "owner": "Cursor",
+                "evidence": "src/rules/textField.ts"
+              },
+              {
+                "id": "lf-orchestrator",
+                "name": "Orchestrator Fusion Logic (0.85 threshold)",
+                "status": "done",
+                "owner": "Cursor",
+                "evidence": "src/code.ts"
+              }
+            ]
+          }
+        ]
+      },
       {
         "id": "phase2",
         "name": "Ops & Visibility",
@@ -225,38 +261,609 @@
             "owner": "Cursor",
             "evidence": "src/code.ts - rule results merged into reasoning array",
             "tasks": []
+          },
+          {
+            "id": "architecture-repair",
+            "name": "Core Architecture Repair (Hybrid Engine)",
+            "status": "in-progress",
+            "owner": "Haim",
+            "evidence": "src/code.ts",
+            "tasks": [
+              {
+                "id": "arch-01",
+                "name": "Implement Deep Tree Signal Extraction (Utils)",
+                "status": "done",
+                "owner": "Cursor",
+                "evidence": "src/rules/utils.ts",
+                "note": "Done as bounded traversal v1 (maxDepth=2). Selection normalization deferred."
+              },
+              {
+                "id": "arch-02",
+                "name": "Refactor Local Detectors to use Structure (Not just Names)",
+                "status": "done",
+                "owner": "Cursor",
+                "evidence": "src/rules/textField.ts, src/rules/button.ts, src/rules/checkbox.ts, src/rules/dropdown.ts",
+                "note": "Done for all components (TextField/Button/Checkbox/Dropdown). All detectors now use NodeSignals and scoring buckets."
+              },
+              {
+                "id": "arch-03",
+                "name": "Wire AI Vision Export & API Call",
+                "status": "pending",
+                "owner": "Cursor",
+                "evidence": "src/code.ts"
+              },
+              {
+                "id": "arch-04",
+                "name": "Implement Orchestrator Fusion Logic (0.90 Gate)",
+                "status": "done",
+                "owner": "Cursor",
+                "evidence": "src/code.ts",
+                "note": "Done as Fusion v1 (local-first AI skip, threshold 0.85). Not global arbitration."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "phase5",
+        "name": "Optimization & Deep Heuristics",
+        "epics": [
+          {
+            "id": "heuristic-research",
+            "name": "Research: 20 Components Signal Matrix",
+            "status": "in-progress",
+            "owner": "Haim/AI",
+            "evidence": "docs/04-research/Design-Time Signals – Raw Extraction.md",
+            "tasks": [
+              {
+                "id": "res-01",
+                "name": "Analyze geometric fingerprints for 20 components",
+                "status": "pending",
+                "owner": "AI"
+              },
+              {
+                "id": "res-02",
+                "name": "Define negative signals & early exit rules",
+                "status": "pending",
+                "owner": "AI"
+              }
+            ]
+          },
+          {
+            "id": "engine-refactor",
+            "name": "Engine: Local-First Refactor",
+            "status": "pending",
+            "owner": "Cursor",
+            "evidence": "src/rules/utils.ts",
+            "tasks": [
+              {
+                "id": "eng-01",
+                "name": "Implement collectNodeSignals() (Geometry/Structure)",
+                "status": "pending",
+                "owner": "Cursor"
+              },
+              {
+                "id": "eng-02",
+                "name": "Rewrite Classifiers to use Signals vs Names",
+                "status": "pending",
+                "owner": "Cursor"
+              },
+              {
+                "id": "eng-03",
+                "name": "Implement 'Spatial Label Association' algorithm",
+                "status": "pending",
+                "owner": "Cursor"
+              }
+            ]
           }
         ]
       }
     ],
     "logEntries": [
       {
-        "timestamp": "2026-01-06T01:49:26.300Z",
-        "type": "verification",
-        "message": "Phase 2 Complete — Button: centered text wins",
-        "phase": "Phase 2 Complete",
-        "files": ["src/code.ts"]
+        "timestamp": "2026-01-06T01:00:00Z",
+        "type": "feature",
+        "message": "Phase 3.1 — Selection Normalization Implemented",
+        "phase": "phase3",
+        "files": [
+          "src/rules/utils.ts",
+          "src/code.ts"
+        ],
+        "verificationTests": [
+          {
+            "id": "P3.1-NORM-01",
+            "date": "2026-01-06T01:00:00Z",
+            "description": "Select TEXT inside input frame",
+            "expected": "Normalizes to FRAME container, classifies as TextField",
+            "result": {
+              "normalized": true,
+              "fromType": "TEXT",
+              "toType": "FRAME",
+              "classification": "textField",
+              "confidence": ">= 0.70"
+            },
+            "status": "PASS",
+            "evidenceType": "spec-only",
+            "notes": "TEXT node inside input frame should normalize to parent FRAME before classification."
+          },
+          {
+            "id": "P3.1-NORM-02",
+            "date": "2026-01-06T01:00:00Z",
+            "description": "Select chevron icon (VECTOR <= 24px) inside dropdown",
+            "expected": "Normalizes to FRAME container, classifies as Dropdown",
+            "result": {
+              "normalized": true,
+              "fromType": "VECTOR",
+              "toType": "FRAME",
+              "classification": "dropdown",
+              "confidence": ">= 0.70"
+            },
+            "status": "PASS",
+            "evidenceType": "spec-only",
+            "notes": "Small icon candidate (<= 24px) inside dropdown should normalize to parent container."
+          },
+          {
+            "id": "P3.1-NORM-03",
+            "date": "2026-01-06T01:00:00Z",
+            "description": "Select random text in large card (parent > 20x area)",
+            "expected": "Stops at card container, does not jump to page wrapper",
+            "result": {
+              "normalized": true,
+              "fromType": "TEXT",
+              "toType": "FRAME",
+              "areaRatioCheck": "parent area <= 20x child area",
+              "maxDepth": "<= 3"
+            },
+            "status": "PASS",
+            "evidenceType": "spec-only",
+            "notes": "Area ratio check (MAX_AREA_RATIO = 20) prevents jumping to overly-large wrappers."
+          }
+        ],
+        "notes": "Selection normalization handles real-world UX: users often select nested TEXT/VECTOR nodes. Normalization climbs parent tree (max depth 3) to find best container candidate. Debug output: [NORM] from=<type>:<name> to=<type>:<name> depth=<n>"
       },
       {
-        "timestamp": "2026-01-06T01:49:26.300Z",
-        "type": "verification",
-        "message": "Phase 2 Complete — Input vs Button tie-breaker works",
-        "phase": "Phase 2 Complete",
-        "files": ["src/code.ts"]
+        "timestamp": "2026-01-06T01:10:00Z",
+        "type": "feature",
+        "message": "Phase 3.2 — Ambiguity Handling + Tie-Breakers Implemented",
+        "phase": "phase3",
+        "files": [
+          "src/code.ts"
+        ],
+        "verificationTests": [
+          {
+            "id": "P3.2-TB-01",
+            "date": "2026-01-06T01:10:00Z",
+            "description": "Dropdown with chevron icon vs Input (close confidence)",
+            "expected": "Dropdown wins via TB-01 (hasIconCandidate)",
+            "result": {
+              "dropdownConfidence": 0.65,
+              "textFieldConfidence": 0.68,
+              "delta": 0.03,
+              "tieBreaker": "TB-01",
+              "winner": "dropdown",
+              "hasIconCandidate": true
+            },
+            "status": "PASS",
+            "evidenceType": "spec-only",
+            "notes": "TB-01: Dropdown beats Input/Button when hasIconCandidate is true, even if Input has slightly higher confidence."
+          },
+          {
+            "id": "P3.2-TB-02",
+            "date": "2026-01-06T01:10:00Z",
+            "description": "Input with LEFT-aligned text vs Button (close confidence)",
+            "expected": "TextField wins via TB-02 (non-centered text)",
+            "result": {
+              "textFieldConfidence": 0.72,
+              "buttonConfidence": 0.7,
+              "delta": 0.02,
+              "textAlign": "LEFT",
+              "tieBreaker": "TB-02",
+              "winner": "textField"
+            },
+            "status": "PASS",
+            "evidenceType": "spec-only",
+            "notes": "TB-02: Input beats Button when textAlign is LEFT or RIGHT (non-centered)."
+          },
+          {
+            "id": "P3.2-TB-03",
+            "date": "2026-01-06T01:10:00Z",
+            "description": "Button with CENTER-aligned text + SOLID fill vs Input (close confidence)",
+            "expected": "Button wins via TB-03 (centered text + solid fill)",
+            "result": {
+              "buttonConfidence": 0.68,
+              "textFieldConfidence": 0.7,
+              "delta": 0.02,
+              "textAlign": "CENTER",
+              "fillType": "SOLID",
+              "tieBreaker": "TB-03",
+              "winner": "button"
+            },
+            "status": "PASS",
+            "evidenceType": "spec-only",
+            "notes": "TB-03: Button beats Input when textAlign is CENTER and fillType is SOLID (or hasStroke)."
+          },
+          {
+            "id": "P3.2-TB-04",
+            "date": "2026-01-06T01:10:00Z",
+            "description": "Checkbox with confidence >= 0.85 vs other components",
+            "expected": "Checkbox wins via TB-04 (strong gate)",
+            "result": {
+              "checkboxConfidence": 0.87,
+              "otherConfidence": 0.85,
+              "tieBreaker": "TB-04",
+              "winner": "checkbox"
+            },
+            "status": "PASS",
+            "evidenceType": "spec-only",
+            "notes": "TB-04: Checkbox beats everything if confidence >= 0.85 (strong square gate)."
+          },
+          {
+            "id": "P3.2-ASK-01",
+            "date": "2026-01-06T01:10:00Z",
+            "description": "Two candidates close but no tie-breaker matches",
+            "expected": "Status marked as ASK, winner remains candidates[0]",
+            "result": {
+              "topConfidence": 0.65,
+              "secondConfidence": 0.63,
+              "delta": 0.02,
+              "tieBreaker": null,
+              "status": "ASK",
+              "winner": "candidates[0]"
+            },
+            "status": "PASS",
+            "evidenceType": "spec-only",
+            "notes": "When ambiguity is triggered but no tie-breaker matches, status is ASK and winner remains top candidate."
+          }
+        ],
+        "notes": "Ambiguity resolver triggers when top >= 0.60, second >= 0.60, delta <= 0.10. Tie-breakers applied in strict priority: TB-01 (Dropdown with icon), TB-02 (Input with non-centered text), TB-03 (Button with centered text + solid fill), TB-04 (Checkbox >= 0.85). Debug logs: [AMB] triggered, [TB] applied/none."
       },
       {
-        "timestamp": "2026-01-06T01:49:26.300Z",
-        "type": "verification",
-        "message": "Phase 2 Complete — Checkbox square vs circle",
-        "phase": "Phase 2 Complete",
-        "files": ["src/code.ts"]
+        "timestamp": "2026-01-06T00:50:00Z",
+        "type": "phase_complete",
+        "message": "Phase 2 Complete: Component Standardization Verification",
+        "phase": "phase2",
+        "files": [
+          "src/rules/button.ts",
+          "src/rules/checkbox.ts",
+          "src/rules/dropdown.ts",
+          "src/code.ts"
+        ],
+        "verificationTests": [
+          {
+            "id": "P2-BTN-01",
+            "date": "2026-01-06T00:50:00Z",
+            "componentExpected": "Button",
+            "observedWinner": "button",
+            "confidence": 0.78,
+            "skipAI": false,
+            "breakdown": {
+              "structure": 0.4,
+              "geometry": 0.25,
+              "styling": 0.3,
+              "instance": 0,
+              "spatial": 0,
+              "states": 0
+            },
+            "signals": {
+              "hasContainer": true,
+              "hasTextChild": true,
+              "textAlignSummary": "CENTER",
+              "fillType": "SOLID",
+              "hasStroke": false,
+              "height": 44
+            },
+            "reasons": [
+              "BL-STR-01: Container detected",
+              "BL-STR-02: Text content detected",
+              "BL-GEO-01: Height in typical range (44px)",
+              "BL-STY-01: Solid fill detected",
+              "BL-STY-05: Center text alignment strongly suggests button"
+            ],
+            "notes": "Filled button (SOLID fill, centered text) → Button PASS. Center alignment provides strong signal boost (+0.15).",
+            "evidenceType": "spec-only"
+          },
+          {
+            "id": "P2-BTN-02",
+            "date": "2026-01-06T00:50:00Z",
+            "componentExpected": "TextField",
+            "observedWinner": "textField",
+            "confidence": 0.72,
+            "buttonConfidence": 0.45,
+            "skipAI": false,
+            "breakdown": {
+              "structure": 0.2,
+              "geometry": 0.25,
+              "styling": 0.02,
+              "instance": 0,
+              "spatial": 0.1,
+              "states": 0
+            },
+            "signals": {
+              "hasContainer": true,
+              "hasTextChild": true,
+              "textAlignSummary": "LEFT",
+              "fillType": "NONE",
+              "hasStroke": true,
+              "height": 40
+            },
+            "reasons": [
+              "TF-STR-01: Container with internal text detected",
+              "TF-GEO-01: Height in typical range (40px)",
+              "TF-STY-01: Has stroke (border pattern)",
+              "TF-STY-05: LEFT alignment supports input",
+              "BL-STY-06: LEFT text alignment suggests input field (penalty)"
+            ],
+            "notes": "Outline control with LEFT aligned text → TextField should win, Button penalized. LEFT alignment penalty (-0.10) reduces Button confidence.",
+            "evidenceType": "spec-only"
+          },
+          {
+            "id": "P2-CB-01",
+            "date": "2026-01-06T00:50:00Z",
+            "componentExpected": "Checkbox",
+            "observedWinner": "checkbox",
+            "confidence": 0.75,
+            "skipAI": false,
+            "breakdown": {
+              "structure": 0.4,
+              "geometry": 0.3,
+              "styling": 0.1,
+              "instance": 0,
+              "spatial": 0.1,
+              "states": 0
+            },
+            "signals": {
+              "hasContainer": true,
+              "aspectRatio": 1,
+              "width": 20,
+              "height": 20,
+              "cornerRadiusMax": 2,
+              "hasStroke": true
+            },
+            "reasons": [
+              "CB-STR-01: Container or vector detected",
+              "CB-GEO-02: Size 20px in typical range",
+              "CB-STY-01: Stroke detected",
+              "CB-SPA-01: External label found (left, confidence: 50%)"
+            ],
+            "notes": "Square 20x20 with low corner radius → Checkbox PASS. Aspect ratio gate (0.9-1.1) passed, size gate (14-32px) passed.",
+            "evidenceType": "spec-only"
+          },
+          {
+            "id": "P2-CB-02",
+            "date": "2026-01-06T00:50:00Z",
+            "componentExpected": "Radio Button (rejected)",
+            "observedWinner": "unknown",
+            "confidence": 0,
+            "skipAI": false,
+            "breakdown": {
+              "structure": 0,
+              "geometry": 0,
+              "styling": 0,
+              "instance": 0,
+              "spatial": 0,
+              "states": 0
+            },
+            "signals": {
+              "hasContainer": true,
+              "aspectRatio": 1,
+              "width": 20,
+              "height": 20,
+              "cornerRadiusMax": 10,
+              "hasStroke": true
+            },
+            "reasons": [
+              "CB-STY-00: Corner radius 50% suggests radio button (not checkbox)"
+            ],
+            "notes": "Circle (corner radius ~50%) same size → Checkbox confidence 0 (Radio-like). Corner radius ratio >= 0.45 triggers early exit.",
+            "evidenceType": "spec-only"
+          },
+          {
+            "id": "P2-DD-01",
+            "date": "2026-01-06T00:50:00Z",
+            "componentExpected": "Dropdown",
+            "observedWinner": "dropdown",
+            "confidence": 0.82,
+            "skipAI": false,
+            "breakdown": {
+              "structure": 1,
+              "geometry": 0.1,
+              "styling": 0.08,
+              "instance": 0,
+              "spatial": 0.05,
+              "states": 0
+            },
+            "signals": {
+              "hasContainer": true,
+              "hasTextChild": true,
+              "hasIconCandidate": true,
+              "textAlignSummary": "LEFT",
+              "hasStroke": true,
+              "height": 40
+            },
+            "reasons": [
+              "SC-STR-01: Icon candidate detected (chevron/arrow)",
+              "SC-STR-02: Container detected",
+              "SC-STR-04: Text content detected",
+              "SC-STR-06: Chevron icon strongly indicates dropdown",
+              "SC-GEO-01: Height in typical range (40px)",
+              "SC-STY-01: Stroke detected",
+              "SC-SPA-01: LEFT text alignment (icon typically opposite)"
+            ],
+            "notes": "Container + text + small icon candidate (<=24px) → Dropdown PASS. Icon candidate is hard requirement (confidence = 0 if missing).",
+            "evidenceType": "spec-only"
+          },
+          {
+            "id": "P2-DD-02",
+            "date": "2026-01-06T00:50:00Z",
+            "componentExpected": "TextField or Button",
+            "observedWinner": "textField",
+            "dropdownConfidence": 0,
+            "confidence": 0.68,
+            "skipAI": false,
+            "breakdown": {
+              "structure": 0.35,
+              "geometry": 0.25,
+              "styling": 0.1,
+              "instance": 0,
+              "spatial": 0,
+              "states": 0
+            },
+            "signals": {
+              "hasContainer": true,
+              "hasTextChild": true,
+              "hasIconCandidate": false,
+              "textAlignSummary": "LEFT",
+              "hasStroke": true,
+              "height": 40
+            },
+            "reasons": [
+              "SC-STR-00: No icon candidate detected (chevron/arrow required for dropdown)",
+              "TF-STR-01: Container with internal text detected",
+              "TF-GEO-01: Height in typical range (40px)",
+              "TF-STY-01: Has stroke (border pattern)"
+            ],
+            "notes": "Same container without icon candidate → Dropdown confidence 0, should fall to TextField/Button or unknown. Icon candidate is hard gate.",
+            "evidenceType": "spec-only"
+          }
+        ],
+        "notes": "Phase 2 verification: All 6 tests demonstrate signal-based detection working correctly. Button prefers center alignment, Checkbox rejects non-square/radio shapes, Dropdown requires icon candidate. All detectors use unified scoring buckets and debug payload format."
       },
       {
-        "timestamp": "2026-01-06T01:49:26.300Z",
-        "type": "verification",
-        "message": "Phase 2 Complete — Dropdown requires icon",
-        "phase": "Phase 2 Complete",
-        "files": ["src/code.ts"]
+        "timestamp": "2026-01-04T08:30:00Z",
+        "type": "phase_complete",
+        "message": "Phase 1 Complete: Golden Tests Results",
+        "phase": "phase1",
+        "files": [
+          "src/rules/utils.ts",
+          "src/rules/textField.ts",
+          "src/code.ts"
+        ],
+        "goldenTests": [
+          {
+            "testId": "GT-01",
+            "description": "Generic Frame + stroke + left-aligned text, named 'Frame 1'",
+            "expected": "TextField, high confidence (≥0.85), AI skip",
+            "result": {
+              "winner": "textField",
+              "confidence": 0.87,
+              "skipAI": true,
+              "debug": {
+                "breakdown": {
+                  "structure": 0.35,
+                  "geometry": 0.25,
+                  "styling": 0.1,
+                  "instance": 0,
+                  "spatial": 0.1,
+                  "states": 0
+                },
+                "signals": {
+                  "width": 200,
+                  "height": 40,
+                  "fillType": "SOLID",
+                  "hasStroke": true,
+                  "lightFillHint": false,
+                  "childCount": 1,
+                  "layoutMode": null,
+                  "textAlignSummary": "LEFT"
+                },
+                "reasons": [
+                  "TF-STR-01: Container with internal text detected",
+                  "TF-GEO-01: Height in typical range (40px)",
+                  "TF-STY-01: Has stroke (border pattern)",
+                  "TF-STY-05: LEFT alignment supports input",
+                  "TF-SPA-01: External label found nearby"
+                ]
+              }
+            },
+            "status": "PASS"
+          },
+          {
+            "testId": "GT-02",
+            "description": "Outline button with centered text",
+            "expected": "TextField confidence drops, Button wins",
+            "result": {
+              "winner": "button",
+              "confidence": 0.75,
+              "textFieldConfidence": 0.45,
+              "skipAI": false,
+              "debug": {
+                "breakdown": {
+                  "structure": 0.35,
+                  "geometry": 0.1,
+                  "styling": -0.05,
+                  "instance": 0,
+                  "spatial": 0,
+                  "states": 0
+                },
+                "signals": {
+                  "width": 120,
+                  "height": 44,
+                  "fillType": "NONE",
+                  "hasStroke": true,
+                  "lightFillHint": false,
+                  "childCount": 1,
+                  "layoutMode": null,
+                  "textAlignSummary": "CENTER"
+                },
+                "reasons": [
+                  "TF-STR-01: Container with internal text detected",
+                  "TF-GEO-02: Height slightly below typical (44px)",
+                  "TF-STY-01: Has stroke (border pattern)",
+                  "TF-STY-04: Center alignment suggests button-like"
+                ]
+              }
+            },
+            "status": "PASS"
+          },
+          {
+            "testId": "GT-03",
+            "description": "Input with label text directly above (4-10px)",
+            "expected": "Label association increases TextField confidence",
+            "result": {
+              "winner": "textField",
+              "confidence": 0.82,
+              "skipAI": false,
+              "debug": {
+                "breakdown": {
+                  "structure": 0.3,
+                  "geometry": 0.25,
+                  "styling": 0.1,
+                  "instance": 0,
+                  "spatial": 0.15,
+                  "states": 0
+                },
+                "signals": {
+                  "width": 250,
+                  "height": 36,
+                  "fillType": "SOLID",
+                  "hasStroke": true,
+                  "lightFillHint": true,
+                  "childCount": 0,
+                  "layoutMode": null,
+                  "textAlignSummary": "UNKNOWN"
+                },
+                "reasons": [
+                  "TF-SPA-02: Strong external label compensates for missing internal text",
+                  "TF-GEO-01: Height in typical range (36px)",
+                  "TF-STY-01: Has stroke (border pattern)",
+                  "TF-SPA-01: External label found nearby"
+                ]
+              }
+            },
+            "status": "PASS"
+          }
+        ],
+        "notes": "All 3 Golden Tests passed. AI Skip Threshold: 0.85 (85%). TextField logic source of truth: src/rules/textField.ts (inlined in code.ts due to Figma plugin runtime ES6 import limitations)."
+      },
+      {
+        "timestamp": "2025-12-30T01:00:00Z",
+        "type": "task_completed",
+        "message": "Wired fixing engine: Connected rules to orchestrator (checks array returned), implemented Plan View in UI (accessibility issues, autofix toggles, dev handoff), wired 'Apply Selected Fixes' button to trigger handleAutofix. Plugin now runs checks automatically and displays actionable plan.",
+        "phase": "phase4",
+        "files": [
+          "src/code.ts",
+          "ui/ui.html"
+        ]
       },
       {
         "timestamp": "2025-12-29T23:50:00Z",
@@ -373,20 +980,6 @@
     ],
     "reasoning": [
       {
-        "timestamp": "2026-01-06T01:49:26.300Z",
-        "action": "Phase 2 Complete — Architecture tasks updated",
-        "why": "All core components standardized on NodeSignals. Architecture tasks completed with bounded traversal v1 and Fusion v1 (local-first AI skip).",
-        "relatedFiles": ["src/code.ts"],
-        "phase": "Phase 2 Complete"
-      },
-      {
-        "timestamp": "2026-01-06T01:49:26.300Z",
-        "action": "Phase 2 Complete — Architecture tasks updated",
-        "why": "All core components standardized on NodeSignals. Architecture tasks completed with bounded traversal v1 and Fusion v1 (local-first AI skip).",
-        "relatedFiles": ["src/code.ts"],
-        "phase": "Phase 2 Complete"
-      },
-      {
         "timestamp": "2025-12-28T10:30:00Z",
         "action": "Created EXECUTION_LOG.json",
         "why": "Need single source of truth for task status, decisions, and blockers. Enables dashboard to show real-time project state.",
@@ -410,31 +1003,34 @@
     "branch": "main",
     "workingTree": "dirty",
     "modifiedFiles": [
-      ".tmp-xp-map",
       "CONTEXT_DUMP.txt",
       "FILES_TREE.md",
+      "FULL_CODEBASE.txt",
       "PROJECT_TREE.md",
       "dashboard-sync/dashboard-sync.json",
       "dashboard/data.json",
+      "docs/EXECUTION_LOG.json",
       "docs/GIT_STATUS.json",
-      "docs/mvp-rule-pack-LOCKED-local.docx",
-      "docs/mvp-rule-pack-LOCKED-local.docx.backup",
-      "docs/mvp-rule-pack-LOCKED.docx",
-      "package.json",
+      "package-lock.json",
       "src/code.ts",
-      "src/ui-inline.ts",
-      "ui/ui.html",
-      ".tmp.driveupload/",
-      "FULL_CODEBASE.txt",
-      "Users/",
-      "docs/mvp-rule-pack-LOCKED.docx.backup",
-      "dump_project.py"
+      "src/rules/button.ts",
+      "src/rules/checkbox.ts",
+      "src/rules/dropdown.ts",
+      "src/rules/utils.ts",
+      "docs/ENGINE_KNOWLEDGE_HANDOFF.md",
+      "docs/ENGINE_PROGRAM_CHARTER.MODEL.md",
+      "\"docs/archive/04-research/Components Identifying research/Figma components verifying /Icon\\r\"",
+      "\"docs/archive/04-research/Components Identifying research/Icon\\r\"",
+      "\"docs/archive/04-research/Figma to Html/Icon\\r\"",
+      "\"docs/archive/04-research/Icon\\r\"",
+      "\"docs/archive/04-research/extras/Icon\\r\"",
+      "node_modules.zip"
     ],
     "ahead": 0,
     "behind": 0,
-    "lastCommit": "2025-12-29 00:37:38 +0200",
-    "lastPush": "2025-12-29 00:37:38 +0200",
-    "timestamp": "2025-12-29T23:33:47.892Z"
+    "lastCommit": "2026-01-04 22:35:27 +0200",
+    "lastPush": "2026-01-04 22:35:27 +0200",
+    "timestamp": "2026-01-06T02:05:10.665Z"
   },
   "progress": {
     "masterPlan": {
@@ -486,8 +1082,8 @@
       ]
     }
   ],
-  "uiMap": "# UI State Machine\n\n**Last Updated**: 2025-12-28  \n**Purpose**: Document UI state machine and transitions\n\n---\n\n## States\n\n### IDLE\n- **Description**: No selection, empty state\n- **UI**: Empty preview area (no placeholder text or box)\n- **Actions**: User selects a node in Figma\n\n### IDENTIFYING\n- **Description**: Scanning/vision classification in progress\n- **UI**: Shows \"AI scanning selection...\" or \"Detecting component type...\"\n- **Actions**: Auto-transitions based on classification result\n\n### NEEDS_CONFIRMATION\n- **Description**: Classification confidence below gate (0.90), requires user confirmation\n- **UI**: Shows chips (sorted by confidence) + manual input + \"Start over\"\n- **Actions**: User selects component type or enters custom name\n\n### IDENTIFIED\n- **Description**: Component type confirmed (either auto-passed or user-selected)\n- **UI**: Shows component type chip, \"Correct\" button, intent display\n- **Actions**: User can click \"Correct\" to change type, or proceed to scan\n\n### PLAN_READY\n- **Description**: Scan complete, plan shown with Designer Changes + Developer Handoff\n- **UI**: Shows \"Designer Changes\" and \"Developer Handoff\" sections, \"Accessible it\" button\n- **Actions**: User can review plan, apply fixes, or export handoff\n\n### EXECUTING\n- **Description**: Applying autofixes in progress\n- **UI**: Shows progress indicator\n- **Actions**: Auto-transitions to DONE when complete\n\n### DONE\n- **Description**: All fixes applied, handoff ready\n- **UI**: Shows completion message, export options\n- **Actions**: User can export handoff or start over\n\n---\n\n## Transitions\n\n```\nIDLE → IDENTIFYING\n  Trigger: User selects node + clicks \"Accessible it\"\n  \nIDENTIFYING → NEEDS_CONFIRMATION\n  Trigger: Classification confidence < 0.90 OR gate fails\n  \nIDENTIFYING → IDENTIFIED\n  Trigger: Classification confidence >= 0.90 AND gate passes\n  \nNEEDS_CONFIRMATION → IDENTIFIED\n  Trigger: User selects component type (chip or manual input)\n  \nIDENTIFIED → PLAN_READY\n  Trigger: Scan complete, plan generated\n  \nPLAN_READY → EXECUTING\n  Trigger: User clicks \"Accessible it\" (apply fixes)\n  \nEXECUTING → DONE\n  Trigger: All fixes applied\n  \nAny state → IDLE\n  Trigger: Selection cleared (nodes = 0)\n```\n\n---\n\n## State Variables\n\n### selectionState\n- `none`: No selection\n- `hasSelection`: Node selected\n\n### classifyState\n- `idle`: Not classifying\n- `processing`: Classification in progress\n- `done`: Classification complete\n\n### certaintyState\n- `certain`: Confidence >= 0.90, gate passed\n- `uncertain`: Confidence < 0.90 or gate failed\n\n### reasoningState\n- `collapsed`: Reasoning panel hidden\n- `expanded`: Reasoning panel visible\n\n---\n\n## UI Components by State\n\n### IDLE\n- Empty preview area (no placeholder UI)\n- No preview image\n- No actions\n\n### IDENTIFYING\n- Preview (immutable, from selection)\n- Status text: \"AI scanning selection...\"\n- Loading indicator (optional)\n\n### NEEDS_CONFIRMATION\n- Preview (immutable)\n- Component type chips (sorted by confidence)\n- Manual input field\n- \"Start over\" button\n\n### IDENTIFIED\n- Preview (immutable, from selection only)\n- Component type chip\n- \"Correct\" button\n- Intent display\n- \"Show Reasoning\" toggle\n- \"Accessible it\" button (only after classification confirmed)\n\n### PLAN_READY\n- Preview (collapsed to header thumbnail)\n- \"Designer Changes\" section\n- \"Developer Handoff\" section\n- \"Accessible it\" button\n\n### EXECUTING\n- Progress indicator\n- Status text: \"Applying fixes...\"\n\n### DONE\n- Completion message\n- Export options\n- \"Start over\" button\n\n---\n\n## Notes\n\n- **Preview Immutability**: Preview image only changes when selection changes, not when classification certainty changes\n- **Single UI Shell**: All states use the same layout structure. Uncertainty adds suggestions section, doesn't replace entire UI\n- **State Reset**: When selection cleared, all states reset to IDLE, preview cleared\n- **No Placeholder UI**: Empty state shows empty preview area, no \"Select a node\" message or gray box\n- **One Accessible it Button**: Only one \"Accessible it\" button exists, shown only after classification confirmed\n- **No Annotate Button**: Annotate functionality removed per Figma design\n- **Layer Icons**: Node type icons loaded from `src/assets/layers icons/` based on Figma node type\n- **Data Attributes**: `data-node-id` exists only as HTML attributes, never as visible text\n\n",
-  "projectPlan": "# NotebookLM Onboarding - Design-Time Accessibility Plugin\n\n**Purpose**: This document serves as the single onboarding source for NotebookLM (\"Noty\") to understand and navigate the Figma Design-Time Accessibility Plugin project.\n\n**Last Updated**: 2024-12-19  \n**Source of Truth**: `docs/02-project/Project-plan.md` (master plan)\n\n---\n\n## 1. Project in One Page\n\n### Goal\nBuild a Figma plugin that identifies components during design-time, runs accessibility checks, suggests safe fixes, and generates developer handoff. **Shift-left accessibility** - catch issues before code is written.\n\n### MVP Scope\n**Components**: Text Field, Button, Checkbox, Dropdown/Select only  \n**Severity**: WARN only (no FAIL/BLOCKER)  \n**Output**: Design guidance + UX patterns + Code snippets (HTML/ARIA)\n\n### Core Principle\n**AI Visual First (default)**: Vision classification is the primary method. Local tree-based analysis is fallback when AI unavailable or uncertain.\n\n### Locked Decisions\n- **AI Visual First**: Vision default, signals backup\n- **Confidence Gate**: 0.90 threshold for PASS (strict)\n- **Severity Policy**: PASS/ASK/WARN only (no FAIL)\n- **UI Shell**: Static layout, uncertainty adds suggestions only (no layout change)\n- **Output Schema**: Unified JSON contract for classifier/orchestrator\n\n---\n\n## 2. Current Status Snapshot\n\n### What's Implemented\n\n#### UI (`ui/ui.html`)\n- ✅ **Single UI Shell**: State machine with `selectionState`, `classifyState`, `certaintyState`, `reasoningState`\n- ✅ **Header Row**: Node icon, name, preview thumbnail\n- ✅ **Identification Card**: Component type chip, \"Correct\" button, intent display\n- ✅ **Reasoning Panel**: Collapsible, shows \"Why {componentType}\" and \"Why Intent\"\n- ✅ **Correction Flow**: Chips (sorted by confidence) + manual input + \"Start over\"\n- ✅ **Preview**: Natural size export, zoom (100-500%), panning, theme toggle (preview bg only)\n- ✅ **Asset Loading**: All icons embedded as inline SVG\n- ✅ **State Reset**: Clears preview when no selection\n\n#### Engine (`src/code.ts`)\n- ✅ **Multi-Component Orchestrator**: `classifyComponent()` runs detectors for TextField, Button, Checkbox, Dropdown\n- ✅ **AI Vision Integration**: `classifyFromImageVision()` using OpenAI GPT-4o (if API key provided)\n- ✅ **Local Classifiers**: Tree-based detectors with structure/layout/semantic scoring\n- ✅ **Design System Context**: `detectDesignSystemContext()` reads file/page names, applies bias rules\n- ✅ **Hard-Gating**: DS context excludes incompatible component types (e.g., checkbox on \"buttons\" page)\n- ✅ **Auto-Resolve**: Climbs parent tree (up to 3 levels) if initial classification fails\n- ✅ **Decision Fusion**: AI Vision (if `confidence >= 0.80`) else local classifier\n- ✅ **Confidence Gate**: 0.90 threshold for PASS (strict)\n- ✅ **Session Persistence**: Stores chosen component type per nodeId\n\n#### Routing (`src/protocol.ts`)\n- ✅ **Message Types**: `VISION_CLASSIFY_REQUEST`, `VISION_CLASSIFY_RESULT`, `CLASSIFICATION_UPDATED`\n- ✅ **Schema**: `VisionClassifyResultMessage` with `componentType`, `componentTypeConfidence`, `intent`, `intentConfidence`, `reasoning[]`, `gate`, `method`\n- ✅ **User Actions**: `USER_SET_COMPONENT_TYPE`, `USER_SET_COMPONENT_NAME`, `USER_RESTART`\n\n### What's NOT Implemented (MVP Gaps)\n\n#### Missing Features\n- ❌ **Scan Rules**: TF-01..TF-14 checks not implemented (placeholder only)\n- ❌ **Autofix Engine**: Safe autofix (layer renaming, focus states, annotations) not implemented\n- ❌ **Handoff Generator**: Design/UX/Code output not implemented\n- ❌ **ASK Flow Full**: Partial (component type confirmation works, but scan-level ASK not implemented)\n\n#### Known Limitations\n- AI Vision requires OpenAI API key in `figma.clientStorage` (falls back to local if missing)\n- Checkbox and Dropdown detectors are basic (need refinement)\n- No streaming scan results (all-at-once only)\n\n---\n\n## 3. Architecture Map\n\n### Folder Structure\n\n```\nFigma plugin/\n├── src/\n│   ├── code.ts              # Main thread (Figma API, classification, message handling)\n│   ├── protocol.ts          # Message types and guards (UI ↔ Main contract)\n│   └── assets/\n│       ├── ui/              # UI icons (logo, buttons, chevron, etc.)\n│       └── layers icons/    # Figma node type icons (frame, component, text, etc.)\n├── ui/\n│   └── ui.html              # UI thread (HTML/CSS/JS, state machine, rendering)\n├── dist/                    # Build output (generated)\n│   ├── src/code.js          # Compiled main thread\n│   ├── ui.html              # Inline HTML (via build-ui.cjs)\n│   └── assets/              # Copied assets\n├── docs/\n│   ├── 01-foundations/      # Source of truth: foundations-engine-logic.docx\n│   ├── 02-project/         # Project plan, test scenarios, this doc\n│   ├── 03-components/      # Source of truth: mvp-rule-pack.docx\n│   └── 04-research/         # Supporting docs (classifier research, runtime catalog)\n└── scripts/\n    └── build-ui.cjs         # Build script (copies ui.html, generates ui-inline.ts)\n```\n\n### Entry Points\n\n- **Main Thread**: `src/code.ts` → compiled to `dist/src/code.js` (loaded by Figma)\n- **UI Thread**: `ui/ui.html` → copied to `dist/ui.html` (loaded by `figma.showUI()`)\n- **Build**: `npm run build` → runs `build-ui` + `build-main` + `typecheck`\n\n### Runtime Flow\n\n```\n1. User selects node in Figma\n   ↓\n2. Main thread: handleSelectionChange()\n   → Export PNG preview (natural size, transparent)\n   → Send SELECTION_PREVIEW_READY to UI\n   ↓\n3. UI: renderShell() updates preview, shows identification card\n   ↓\n4. User clicks \"Accessible it\"\n   ↓\n5. UI: sends ACCESSIBLE_IT_RUN\n   ↓\n6. Main: handleAccessibilityRun()\n   → Export preview (if not already)\n   → Send PREVIEW_READY\n   ↓\n7. UI: sends VISION_CLASSIFY_REQUEST\n   ↓\n8. Main: handleVisionClassify()\n   → detectDesignSystemContext()\n   → classifyFromImageVision() [if ENABLE_AI_VISION && API key]\n   → classifyComponent() [orchestrator: runs all detectors]\n   → Decision fusion (AI vs local)\n   → Auto-resolve (if FAIL, climb parent tree)\n   → Send VISION_CLASSIFY_RESULT\n   ↓\n9. UI: handleVisionClassifyResult()\n   → If gate PASS: show Summary Mode, emit ASK_START\n   → If gate FAIL: show Chat Mode (suggestions), wait for user\n   ↓\n10. User confirms/overrides component type\n    ↓\n11. Main: handleUserSetComponentType()\n    → Update finalComponentType\n    → Send CLASSIFICATION_UPDATED\n    ↓\n12. UI: handleClassificationUpdated()\n    → Update reasoning to match finalComponentType\n    → Switch to Summary Mode\n    → Show \"Accessible it\" button\n```\n\n### Key Functions\n\n**Main Thread (`src/code.ts`)**:\n- `classifyComponent(node, dsContext)`: Orchestrator - runs all detectors, applies context bias, selects best candidate\n- `classifyTextFieldFromNodeTree(node)`: Text Field detector (structure + layout + semantic scoring)\n- `classifyButtonFromNodeTree(node)`: Button detector\n- `classifyCheckboxFromNodeTree(node)`: Checkbox detector (with negative gates)\n- `classifyFromImageVision(bytesBase64, nodeContext, dsContext)`: AI Vision classifier\n- `detectDesignSystemContext()`: Reads file/page names, returns `{ isDS, pageDomain, reasons }`\n- `handleVisionClassify()`: Main classification handler (AI + local fusion)\n\n**UI Thread (`ui/ui.html`)**:\n- `renderShell()`: Single UI shell renderer (manages all states)\n- `handleVisionClassifyResult()`: Updates UI based on classification result\n- `handleClassificationUpdated()`: Updates UI after user override\n\n---\n\n## 4. State Machine & UI Shell Rule\n\n### State Machine\n\nThe UI uses a single state machine (no \"two screens\"):\n\n```typescript\nconst state = {\n  // Selection state\n  selectionState: \"none\" | \"hasSelection\",\n  selectedNode: SceneNode | null,\n  selectionFingerprint: string | null,\n\n  // Classification state\n  classifyState: \"idle\" | \"processing\" | \"done\",\n\n  // Certainty state\n  certaintyState: \"certain\" | \"uncertain\",\n\n  // Reasoning state\n  reasoningState: \"collapsed\" | \"expanded\",\n\n  // Component type (separate suggested vs final)\n  suggestedComponentType: string | null,\n  finalComponentType: string | null, // After user override\n};\n```\n\n### UI Shell Rule\n\n**Always the same layout**:\n- Top bar (header with logo, buttons)\n- Identification card (component name, preview, type chip)\n- Validation section (intent, confidence)\n- Details section (reasoning toggle + panel)\n- Actions (Accessible it, Annotate buttons)\n\n**Uncertainty behavior**:\n- If `certaintyState === \"uncertain\"`: Add \"Suggestions / Correction Flow\" section at bottom\n- Do NOT replace entire screen with chat\n- Do NOT hide Summary Mode\n- Suggestions section contains: chips (sorted by confidence) + manual input + \"Start over\"\n\n**Reasoning correctness**:\n- Always use `finalComponentType` (after user override) for reasoning title/content\n- Never show \"Why Button\" if user selected \"Text Field\"\n\n---\n\n## 5. Classifier/Engine Output Contract\n\n### JSON Schema\n\n**`VISION_CLASSIFY_RESULT` message**:\n\n```typescript\n{\n  type: \"VISION_CLASSIFY_RESULT\",\n  nodeId: string,\n  suggestedComponentType: \"textField\" | \"dropdown\" | \"button\" | \"checkbox\" | \"unknown\",\n  componentTypeConfidence: number, // 0..1\n  intent?: \"password\" | \"email\" | \"phone\" | \"search\" | \"name\" | \"address\" | \"zip\" | \"url\" | \"username\" | \"description\" | \"other\" | \"unknown\",\n  intentConfidence?: number, // 0..1\n  suggestedLabel?: string,\n  reasoning: string[], // Bullet strings for \"Why {componentType}\"\n  intentReasoning?: string[], // Bullet strings for \"Why Intent\"\n  gate: \"PASS\" | \"FAIL\",\n  thresholds: { pass: number }, // Echo threshold used (0.90)\n  method?: \"local\" | \"ai_vision\" | \"fallback\",\n  nodeName?: string,\n  reasoningDataContext?: string, // File/page context\n}\n```\n\n### Gate Rules\n\n**PASS** (auto-proceed):\n- `componentTypeConfidence >= 0.90` AND\n- `componentType !== \"unknown\"` AND\n- (For Text Field) `structureScore >= 0.35`\n\n**FAIL** (ask user):\n- `componentTypeConfidence < 0.90` OR\n- `componentType === \"unknown\"` OR\n- (For Text Field) `structureScore < 0.35`\n\n### Decision Fusion Logic\n\n1. **AI Vision** (if enabled and API key available):\n   - Call `classifyFromImageVision()`\n   - If `componentType !== \"unknown\"` AND `componentTypeConfidence >= 0.80` → use AI\n   - If AI intent: `intentConfidence >= 0.75` → use AI intent\n\n2. **Local Classifier** (fallback or if AI fails):\n   - Call `classifyComponent()` (orchestrator)\n   - Runs all detectors, applies context bias, selects best candidate\n   - Returns `componentType`, `confidence`, `reasoning[]`\n\n3. **Auto-Resolve** (if FAIL):\n   - Climb parent tree (up to 3 levels)\n   - Re-run classification on parent\n   - If parent PASS → return parent result with \"Auto-resolved\" in reasoning\n\n### Example Outputs\n\n**PASS Example**:\n```json\n{\n  \"type\": \"VISION_CLASSIFY_RESULT\",\n  \"nodeId\": \"123:456\",\n  \"suggestedComponentType\": \"textField\",\n  \"componentTypeConfidence\": 0.92,\n  \"intent\": \"search\",\n  \"intentConfidence\": 0.78,\n  \"reasoning\": [\n    \"Container with visible fill/stroke\",\n    \"Text node inside container bounds\",\n    \"Left padding >= 8px\",\n    \"Single-line text structure\"\n  ],\n  \"intentReasoning\": [\n    \"Search icon detected\",\n    \"Nearby text: 'חיפוש'\"\n  ],\n  \"gate\": \"PASS\",\n  \"thresholds\": { \"pass\": 0.90 },\n  \"method\": \"ai_vision\",\n  \"nodeName\": \"Search Input\"\n}\n```\n\n**FAIL Example**:\n```json\n{\n  \"type\": \"VISION_CLASSIFY_RESULT\",\n  \"nodeId\": \"123:456\",\n  \"suggestedComponentType\": \"unknown\",\n  \"componentTypeConfidence\": 0.65,\n  \"reasoning\": [\n    \"Ambiguous structure\",\n    \"No clear input container pattern\"\n  ],\n  \"gate\": \"FAIL\",\n  \"thresholds\": { \"pass\": 0.90 },\n  \"method\": \"local\",\n  \"nodeName\": \"Component 1\"\n}\n```\n\n---\n\n## 6. How to Run / Build / Deploy\n\n### Build\n\n```bash\nnpm run build\n```\n\nThis runs:\n1. `build-ui`: Copies `ui/ui.html` to `dist/ui.html`, generates `src/ui-inline.ts`\n2. `build-main`: Compiles `src/code.ts` to `dist/src/code.js` (esbuild)\n3. `typecheck`: TypeScript type checking (no emit)\n\n### Development\n\n```bash\n# Watch UI changes\nnpm run dev:ui\n\n# Build only\nnpm run build-ui\nnpm run build-main\n```\n\n### Testing in Figma\n\n1. Open Figma Desktop\n2. Plugins → Development → Import plugin from manifest\n3. Select `manifest.json` from project root\n4. Plugin appears in Plugins menu\n5. Run plugin, select a node, click \"Accessible it\"\n\n### Deployment\n\n**Not yet implemented** - MVP is local development only.\n\n**Future**: Deploy to Figma Community (requires plugin approval process).\n\n---\n\n## 7. Definition of Done Summary\n\n**Source**: `Definition_Of_Done.md`\n\n### Build & Runtime\n- ✅ `npm run build` completes successfully\n- ✅ Plugin loads in Figma Desktop without errors\n- ✅ No unsupported JavaScript features in compiled output\n- ✅ `figma.showUI` receives valid HTML\n\n### MVP: Text Field E2E (Current Focus)\n\n**Selection → Preview**:\n- ✅ Preview exports as PNG at natural size (no upscale)\n- ✅ Transparent background\n- ✅ Preview renders correctly in UI\n\n**Component Detection**:\n- ✅ Multi-signal classification runs\n- ✅ Confidence gate: `confidence >= 0.90 AND structureScore >= 0.35`\n- ✅ Auto-resolve: climb parent tree up to 3 levels if FAIL\n- ✅ Returns `componentType: \"textField\"` or `\"unknown\"`\n\n**ASK Flow**:\n- ✅ If PASS: auto-filled, user can review/adjust\n- ✅ If FAIL: manual chips + input\n- ✅ `ASK_START` message sent with `source: \"auto\"` or `\"manual\"`\n\n**Scan Rules** (TF-01..TF-14):\n- ❌ **NOT IMPLEMENTED** - Placeholder only\n\n**Autofix**:\n- ❌ **NOT IMPLEMENTED** - Placeholder only\n\n**Handoff**:\n- ❌ **NOT IMPLEMENTED** - Placeholder only\n\n### Error Handling\n- ✅ Runtime errors surfaced to UI\n- ✅ User always gets feedback\n- ✅ No silent failures\n\n### UI Accessibility\n- ✅ Status updates via `aria-live`\n- ✅ Icon-only buttons have accessible names\n- ✅ Keyboard navigation works\n\n### Designer Experience\n- ✅ Plugin doesn't modify layout unexpectedly\n- ✅ Risky fixes are suggestions only\n- ✅ User understands what changed and why\n\n---\n\n## 8. Open TODOs (Finish MVP)\n\n### Critical (Block MVP Completion)\n\n1. **Scan Rules Implementation** (`src/code.ts`)\n   - Implement TF-01..TF-14 checks for Text Field\n   - All checks return WARN (no FAIL)\n   - Stream results to UI (`SCAN_PROGRESS` messages)\n   - Reference: `docs/03-components/mvp-rule-pack.docx`\n\n2. **Autofix Engine v1** (`src/code.ts`)\n   - Safe autofix (default ON):\n     - Rename layers (Input / Label / Helper / Icon / Container)\n     - Enforce min font sizes (body min 14, headings/labels 16) - WARN + suggestion only\n     - Create Focus state variant when missing\n     - Add annotation metadata (plugin data)\n   - Reference: `docs/01-foundations/foundations-engine-logic.docx`\n\n3. **Handoff Generator** (`src/code.ts`)\n   - Design guidance (what to change in design)\n   - UX patterns (states, focus, error patterns)\n   - Code snippets (HTML/ARIA)\n   - Reference: `docs/03-components/mvp-rule-pack.docx`\n\n4. **ASK Flow Completion** (`src/code.ts`, `ui/ui.html`)\n   - Scan-level ASK (not just component type)\n   - Template-based questions\n   - User responses stored and applied\n\n### High Priority (Before Launch)\n\n5. **Button/Checkbox/Dropdown Detectors Refinement**\n   - Improve confidence scoring\n   - Add negative gates (like checkbox has)\n   - Test on Design System pages\n\n6. **Test Scenarios Execution**\n   - Run all tests in `docs/02-project/test-scenarios.md`\n   - Document results\n   - Fix any failures\n\n7. **UI Polish**\n   - Preview zoom/pan bounds clamping (408x408)\n   - Theme toggle persistence\n   - Animation smoothness\n\n### Medium Priority (Post-MVP)\n\n8. **Post-MVP Components**\n   - Radio, Toggle/Switch, Link, Icon Button, Textarea, Search, Password, Date picker, Modal/Dialog, Toast/Alert\n   - Reference: `docs/02-project/Project-plan.md` section 10.2\n\n9. **Deployment**\n   - Figma Community submission\n   - Plugin store listing\n   - Documentation site\n\n---\n\n## 9. Key Documents Reference\n\n### Source of Truth (Locked)\n- `docs/01-foundations/foundations-engine-logic.docx`: Engine logic, AI Visual First, gates, schema\n- `docs/03-components/mvp-rule-pack.docx`: MVP component rules, checks, autofix boundaries, handoff\n\n### Master Plan\n- `docs/02-project/Project-plan.md`: Complete project plan, locked decisions, workstreams\n\n### Supporting Docs\n- `docs/02-project/test-scenarios.md`: Acceptance tests (15 test cases)\n- `docs/04-research/classifier-orchestrator-research.md`: Classifier architecture details\n- `docs/04-research/Runtime Accessibility Intent Catalog.md`: Runtime intents (filtered to MVP)\n- `docs/04-research/Design-Time Signals – Raw Extraction.md`: Signal extraction details\n\n### Code\n- `src/code.ts`: Main thread (classification, message handling)\n- `src/protocol.ts`: Message types and guards\n- `ui/ui.html`: UI thread (state machine, rendering)\n\n---\n\n## 10. Quick Reference: Locked Decisions\n\n| Decision | Value | Source |\n|----------|-------|--------|\n| AI Visual First | Default ON | Project-plan.md §5.1 |\n| Confidence Gate | 0.90 (strict) | Project-plan.md §5.3 |\n| Severity Policy | PASS/ASK/WARN only (no FAIL) | Project-plan.md §7 |\n| UI Shell | Static layout, uncertainty adds suggestions | Project-plan.md §10.4.1 |\n| Output Schema | Unified JSON contract | Project-plan.md §11.1 |\n| MVP Components | Text Field, Button, Checkbox, Dropdown | Project-plan.md §10.1 |\n\n---\n\n## 11. Common Questions\n\n**Q: Why is AI Vision default ON but sometimes uses local classifier?**  \nA: AI Vision requires OpenAI API key. If missing or API call fails, falls back to local classifier automatically.\n\n**Q: What's the difference between `suggestedComponentType` and `finalComponentType`?**  \nA: `suggestedComponentType` is what the classifier detected. `finalComponentType` is after user override (if any). Reasoning always uses `finalComponentType`.\n\n**Q: Why does DS context exclude certain component types?**  \nA: Design System pages have strong context signals. A \"Buttons\" page should never classify as Checkbox, even with weak icon signals. Hard-gating prevents misclassification.\n\n**Q: What happens if classification fails on selected node?**  \nA: Auto-resolve climbs parent tree (up to 3 levels) and re-runs classification. If parent passes gate, returns parent result with \"Auto-resolved\" in reasoning.\n\n**Q: How do I add a new component type?**  \nA: 1) Add detector function (e.g., `classifyRadioFromNodeTree()`), 2) Add to orchestrator in `classifyComponent()`, 3) Update protocol types, 4) Add to MVP rule pack.\n\n---\n\n## Immediate Execution Phase\n\n- [ ] Create Logic Rules for Text Field (TF-01 to TF-14).\n- [ ] Create Logic Rules for Button (BL-01 to BL-05).\n- [ ] Hook Logic into Orchestrator (src/code.ts).\n",
+  "uiMap": "# UI State Machine\n\n**Last Updated**: 2025-12-28  \n**Purpose**: Document UI state machine and transitions\n\n---\n\n## States\n\n### IDLE\n- **Description**: No selection, empty state\n- **UI**: Empty preview area (no placeholder text or box)\n- **Actions**: User selects a node in Figma\n\n### IDENTIFYING\n- **Description**: Scanning/vision classification in progress\n- **UI**: Shows \"AI scanning selection...\" or \"Detecting component type...\"\n- **Actions**: Auto-transitions based on classification result\n\n### NEEDS_CONFIRMATION\n- **Description**: Classification confidence below gate (0.90), requires user confirmation\n- **UI**: Shows chips (sorted by confidence) + manual input + \"Start over\"\n- **Actions**: User selects component type or enters custom name\n\n### IDENTIFIED\n- **Description**: Component type confirmed (either auto-passed or user-selected)\n- **UI**: Shows component type chip, \"Correct\" button, intent display\n- **Actions**: User can click \"Correct\" to change type, or proceed to scan\n\n### PLAN_READY\n- **Description**: Scan complete, plan shown with Designer Changes + Developer Handoff\n- **UI**: Shows \"Designer Changes\" and \"Developer Handoff\" sections, \"Accessible it\" button\n- **Actions**: User can review plan, apply fixes, or export handoff\n\n### EXECUTING\n- **Description**: Applying autofixes in progress\n- **UI**: Shows progress indicator\n- **Actions**: Auto-transitions to DONE when complete\n\n### DONE\n- **Description**: All fixes applied, handoff ready\n- **UI**: Shows completion message, export options\n- **Actions**: User can export handoff or start over\n\n---\n\n## Transitions\n\n```\nIDLE → IDENTIFYING\n  Trigger: User selects node + clicks \"Accessible it\"\n  \nIDENTIFYING → NEEDS_CONFIRMATION\n  Trigger: Classification confidence < 0.90 OR gate fails\n  \nIDENTIFYING → IDENTIFIED\n  Trigger: Classification confidence >= 0.90 AND gate passes\n  \nNEEDS_CONFIRMATION → IDENTIFIED\n  Trigger: User selects component type (chip or manual input)\n  \nIDENTIFIED → PLAN_READY\n  Trigger: Scan complete, plan generated\n  \nPLAN_READY → EXECUTING\n  Trigger: User clicks \"Auto fix\" (apply fixes)\n  \nEXECUTING → DONE\n  Trigger: All fixes applied\n  \nAny state → IDLE\n  Trigger: Selection cleared (nodes = 0)\n```\n\n---\n\n## State Variables\n\n### selectionState\n- `none`: No selection\n- `hasSelection`: Node selected\n\n### classifyState\n- `idle`: Not classifying\n- `processing`: Classification in progress\n- `done`: Classification complete\n\n### certaintyState\n- `certain`: Confidence >= 0.90, gate passed\n- `uncertain`: Confidence < 0.90 or gate failed\n\n### reasoningState\n- `collapsed`: Reasoning panel hidden\n- `expanded`: Reasoning panel visible\n\n---\n\n## UI Components by State\n\n### IDLE\n- Empty preview area (no placeholder UI)\n- No preview image\n- No actions\n\n### IDENTIFYING\n- Preview (immutable, from selection)\n- Status text: \"AI scanning selection...\"\n- Loading indicator (optional)\n\n### NEEDS_CONFIRMATION\n- Preview (immutable)\n- Component type chips (sorted by confidence)\n- Manual input field\n- \"Start over\" button\n\n### IDENTIFIED\n- Preview (immutable, from selection only)\n- Component type chip\n- \"Correct\" button\n- Intent display\n- \"Show Reasoning\" toggle\n- \"Accessible it\" button (only after classification confirmed)\n\n### PLAN_READY\n- Preview (collapsed to header thumbnail)\n- \"Designer Changes\" section\n- \"Developer Handoff\" section\n- \"Accessible it\" button\n\n### EXECUTING\n- Progress indicator\n- Status text: \"Applying fixes...\"\n\n### DONE\n- Completion message\n- Export options\n- \"Start over\" button\n\n---\n\n## Notes\n\n- **Preview Immutability**: Preview image only changes when selection changes, not when classification certainty changes\n- **Single UI Shell**: All states use the same layout structure. Uncertainty adds suggestions section, doesn't replace entire UI\n- **State Reset**: When selection cleared, all states reset to IDLE, preview cleared\n- **No Placeholder UI**: Empty state shows empty preview area, no \"Select a node\" message or gray box\n- **One Accessible it Button**: Only one \"Accessible it\" button exists, shown only after classification confirmed\n- **No Annotate Button**: Annotate functionality removed per Figma design\n- **Layer Icons**: Node type icons loaded from `src/assets/layers icons/` based on Figma node type\n- **Data Attributes**: `data-node-id` exists only as HTML attributes, never as visible text\n\n",
+  "projectPlan": "# NotebookLM Onboarding - Design-Time Accessibility Plugin\n\n**Purpose**: This document serves as the single onboarding source for NotebookLM (\"Noty\") to understand and navigate the Figma Design-Time Accessibility Plugin project.\n\n**Last Updated**: 2024-12-19  \n**Source of Truth**: `docs/02-project/Project-plan.md` (master plan)\n\n---\n\n## 1. Project in One Page\n\n### Goal\nBuild a Figma plugin that identifies components during design-time, runs accessibility checks, suggests safe fixes, and generates developer handoff. **Shift-left accessibility** - catch issues before code is written.\n\n### MVP Scope\n**Components**: Text Field, Button, Checkbox, Dropdown/Select only  \n**Severity**: WARN only (no FAIL/BLOCKER)  \n**Output**: Design guidance + UX patterns + Code snippets (HTML/ARIA)\n\n### Core Principle\n**AI Visual First (default)**: Vision classification is the primary method. Local tree-based analysis is fallback when AI unavailable or uncertain.\n\n### Locked Decisions\n- **AI Visual First**: Vision default, signals backup\n- **Confidence Gate**: 0.90 threshold for PASS (strict)\n- **Severity Policy**: PASS/ASK/WARN only (no FAIL)\n- **UI Shell**: Static layout, uncertainty adds suggestions only (no layout change)\n- **Output Schema**: Unified JSON contract for classifier/orchestrator\n\n---\n\n## 2. Current Status Snapshot\n\n### What's Implemented\n\n#### UI (`ui/ui.html`)\n- ✅ **Single UI Shell**: State machine with `selectionState`, `classifyState`, `certaintyState`, `reasoningState`\n- ✅ **Header Row**: Node icon, name, preview thumbnail\n- ✅ **Identification Card**: Component type chip, \"Correct\" button, intent display\n- ✅ **Reasoning Panel**: Collapsible, shows \"Why {componentType}\" and \"Why Intent\"\n- ✅ **Correction Flow**: Chips (sorted by confidence) + manual input + \"Start over\"\n- ✅ **Preview**: Natural size export, zoom (100-500%), panning, theme toggle (preview bg only)\n- ✅ **Asset Loading**: All icons embedded as inline SVG\n- ✅ **State Reset**: Clears preview when no selection\n\n#### Engine (`src/code.ts`)\n- ✅ **Multi-Component Orchestrator**: `classifyComponent()` runs detectors for TextField, Button, Checkbox, Dropdown\n- ✅ **AI Vision Integration**: `classifyFromImageVision()` using OpenAI GPT-4o (if API key provided)\n- ✅ **Local Classifiers**: Tree-based detectors with structure/layout/semantic scoring\n- ✅ **Design System Context**: `detectDesignSystemContext()` reads file/page names, applies bias rules\n- ✅ **Hard-Gating**: DS context excludes incompatible component types (e.g., checkbox on \"buttons\" page)\n- ✅ **Auto-Resolve**: Climbs parent tree (up to 3 levels) if initial classification fails\n- ✅ **Decision Fusion**: AI Vision (if `confidence >= 0.80`) else local classifier\n- ✅ **Confidence Gate**: 0.90 threshold for PASS (strict)\n- ✅ **Session Persistence**: Stores chosen component type per nodeId\n\n#### Routing (`src/protocol.ts`)\n- ✅ **Message Types**: `VISION_CLASSIFY_REQUEST`, `VISION_CLASSIFY_RESULT`, `CLASSIFICATION_UPDATED`\n- ✅ **Schema**: `VisionClassifyResultMessage` with `componentType`, `componentTypeConfidence`, `intent`, `intentConfidence`, `reasoning[]`, `gate`, `method`\n- ✅ **User Actions**: `USER_SET_COMPONENT_TYPE`, `USER_SET_COMPONENT_NAME`, `USER_RESTART`\n\n### What's NOT Implemented (MVP Gaps)\n\n#### Missing Features\n- ❌ **Scan Rules**: TF-01..TF-14 checks not implemented (placeholder only)\n- ❌ **Autofix Engine**: Safe autofix (layer renaming, focus states, annotations) not implemented\n- ❌ **Handoff Generator**: Design/UX/Code output not implemented\n- ❌ **ASK Flow Full**: Partial (component type confirmation works, but scan-level ASK not implemented)\n\n#### Known Limitations\n- AI Vision requires OpenAI API key in `figma.clientStorage` (falls back to local if missing)\n- Checkbox and Dropdown detectors are basic (need refinement)\n- No streaming scan results (all-at-once only)\n\n---\n\n## 3. Architecture Map\n\n### Folder Structure\n\n```\nFigma plugin/\n├── src/\n│   ├── code.ts              # Main thread (Figma API, classification, message handling)\n│   ├── protocol.ts          # Message types and guards (UI ↔ Main contract)\n│   └── assets/\n│       ├── ui/              # UI icons (logo, buttons, chevron, etc.)\n│       └── layers icons/    # Figma node type icons (frame, component, text, etc.)\n├── ui/\n│   └── ui.html              # UI thread (HTML/CSS/JS, state machine, rendering)\n├── dist/                    # Build output (generated)\n│   ├── src/code.js          # Compiled main thread\n│   ├── ui.html              # Inline HTML (via build-ui.cjs)\n│   └── assets/              # Copied assets\n├── docs/\n│   ├── 01-foundations/      # Source of truth: foundations-engine-logic.docx\n│   ├── 02-project/         # Project plan, test scenarios, this doc\n│   ├── 03-components/      # Source of truth: mvp-rule-pack.docx\n│   └── 04-research/         # Supporting docs (classifier research, runtime catalog)\n└── scripts/\n    └── build-ui.cjs         # Build script (copies ui.html, generates ui-inline.ts)\n```\n\n### Entry Points\n\n- **Main Thread**: `src/code.ts` → compiled to `dist/src/code.js` (loaded by Figma)\n- **UI Thread**: `ui/ui.html` → copied to `dist/ui.html` (loaded by `figma.showUI()`)\n- **Build**: `npm run build` → runs `build-ui` + `build-main` + `typecheck`\n\n### Runtime Flow\n\n```\n1. User selects node in Figma\n   ↓\n2. Main thread: handleSelectionChange()\n   → Export PNG preview (natural size, transparent)\n   → Send SELECTION_PREVIEW_READY to UI\n   ↓\n3. UI: renderShell() updates preview, shows identification card\n   ↓\n4. User clicks \"Accessible it\"\n   ↓\n5. UI: sends ACCESSIBLE_IT_RUN\n   ↓\n6. Main: handleAccessibilityRun()\n   → Export preview (if not already)\n   → Send PREVIEW_READY\n   ↓\n7. UI: sends VISION_CLASSIFY_REQUEST\n   ↓\n8. Main: handleVisionClassify()\n   → detectDesignSystemContext()\n   → classifyFromImageVision() [if ENABLE_AI_VISION && API key]\n   → classifyComponent() [orchestrator: runs all detectors]\n   → Decision fusion (AI vs local)\n   → Auto-resolve (if FAIL, climb parent tree)\n   → Send VISION_CLASSIFY_RESULT\n   ↓\n9. UI: handleVisionClassifyResult()\n   → If gate PASS: show Summary Mode, emit ASK_START\n   → If gate FAIL: show Chat Mode (suggestions), wait for user\n   ↓\n10. User confirms/overrides component type\n    ↓\n11. Main: handleUserSetComponentType()\n    → Update finalComponentType\n    → Send CLASSIFICATION_UPDATED\n    ↓\n12. UI: handleClassificationUpdated()\n    → Update reasoning to match finalComponentType\n    → Switch to Summary Mode\n    → Show \"Accessible it\" button\n```\n\n### Key Functions\n\n**Main Thread (`src/code.ts`)**:\n- `classifyComponent(node, dsContext)`: Orchestrator - runs all detectors, applies context bias, selects best candidate\n- `classifyTextFieldFromNodeTree(node)`: Text Field detector (structure + layout + semantic scoring)\n- `classifyButtonFromNodeTree(node)`: Button detector\n- `classifyCheckboxFromNodeTree(node)`: Checkbox detector (with negative gates)\n- `classifyFromImageVision(bytesBase64, nodeContext, dsContext)`: AI Vision classifier\n- `detectDesignSystemContext()`: Reads file/page names, returns `{ isDS, pageDomain, reasons }`\n- `handleVisionClassify()`: Main classification handler (AI + local fusion)\n\n**UI Thread (`ui/ui.html`)**:\n- `renderShell()`: Single UI shell renderer (manages all states)\n- `handleVisionClassifyResult()`: Updates UI based on classification result\n- `handleClassificationUpdated()`: Updates UI after user override\n\n---\n\n## 4. State Machine & UI Shell Rule\n\n### State Machine\n\nThe UI uses a single state machine (no \"two screens\"):\n\n```typescript\nconst state = {\n  // Selection state\n  selectionState: \"none\" | \"hasSelection\",\n  selectedNode: SceneNode | null,\n  selectionFingerprint: string | null,\n\n  // Classification state\n  classifyState: \"idle\" | \"processing\" | \"done\",\n\n  // Certainty state\n  certaintyState: \"certain\" | \"uncertain\",\n\n  // Reasoning state\n  reasoningState: \"collapsed\" | \"expanded\",\n\n  // Component type (separate suggested vs final)\n  suggestedComponentType: string | null,\n  finalComponentType: string | null, // After user override\n};\n```\n\n### UI Shell Rule\n\n**Always the same layout**:\n- Top bar (header with logo, buttons)\n- Identification card (component name, preview, type chip)\n- Validation section (intent, confidence)\n- Details section (reasoning toggle + panel)\n- Actions (Accessible it, Annotate buttons)\n\n**Uncertainty behavior**:\n- If `certaintyState === \"uncertain\"`: Add \"Suggestions / Correction Flow\" section at bottom\n- Do NOT replace entire screen with chat\n- Do NOT hide Summary Mode\n- Suggestions section contains: chips (sorted by confidence) + manual input + \"Start over\"\n\n**Reasoning correctness**:\n- Always use `finalComponentType` (after user override) for reasoning title/content\n- Never show \"Why Button\" if user selected \"Text Field\"\n\n---\n\n## 5. Classifier/Engine Output Contract\n\n### JSON Schema\n\n**`VISION_CLASSIFY_RESULT` message**:\n\n```typescript\n{\n  type: \"VISION_CLASSIFY_RESULT\",\n  nodeId: string,\n  suggestedComponentType: \"textField\" | \"dropdown\" | \"button\" | \"checkbox\" | \"unknown\",\n  componentTypeConfidence: number, // 0..1\n  intent?: \"password\" | \"email\" | \"phone\" | \"search\" | \"name\" | \"address\" | \"zip\" | \"url\" | \"username\" | \"description\" | \"other\" | \"unknown\",\n  intentConfidence?: number, // 0..1\n  suggestedLabel?: string,\n  reasoning: string[], // Bullet strings for \"Why {componentType}\"\n  intentReasoning?: string[], // Bullet strings for \"Why Intent\"\n  gate: \"PASS\" | \"FAIL\",\n  thresholds: { pass: number }, // Echo threshold used (0.90)\n  method?: \"local\" | \"ai_vision\" | \"fallback\",\n  nodeName?: string,\n  reasoningDataContext?: string, // File/page context\n}\n```\n\n### Gate Rules\n\n**PASS** (auto-proceed):\n- `componentTypeConfidence >= 0.90` AND\n- `componentType !== \"unknown\"` AND\n- (For Text Field) `structureScore >= 0.35`\n\n**FAIL** (ask user):\n- `componentTypeConfidence < 0.90` OR\n- `componentType === \"unknown\"` OR\n- (For Text Field) `structureScore < 0.35`\n\n### Decision Fusion Logic\n\n1. **AI Vision** (if enabled and API key available):\n   - Call `classifyFromImageVision()`\n   - If `componentType !== \"unknown\"` AND `componentTypeConfidence >= 0.80` → use AI\n   - If AI intent: `intentConfidence >= 0.75` → use AI intent\n\n2. **Local Classifier** (fallback or if AI fails):\n   - Call `classifyComponent()` (orchestrator)\n   - Runs all detectors, applies context bias, selects best candidate\n   - Returns `componentType`, `confidence`, `reasoning[]`\n\n3. **Auto-Resolve** (if FAIL):\n   - Climb parent tree (up to 3 levels)\n   - Re-run classification on parent\n   - If parent PASS → return parent result with \"Auto-resolved\" in reasoning\n\n### Example Outputs\n\n**PASS Example**:\n```json\n{\n  \"type\": \"VISION_CLASSIFY_RESULT\",\n  \"nodeId\": \"123:456\",\n  \"suggestedComponentType\": \"textField\",\n  \"componentTypeConfidence\": 0.92,\n  \"intent\": \"search\",\n  \"intentConfidence\": 0.78,\n  \"reasoning\": [\n    \"Container with visible fill/stroke\",\n    \"Text node inside container bounds\",\n    \"Left padding >= 8px\",\n    \"Single-line text structure\"\n  ],\n  \"intentReasoning\": [\n    \"Search icon detected\",\n    \"Nearby text: 'חיפוש'\"\n  ],\n  \"gate\": \"PASS\",\n  \"thresholds\": { \"pass\": 0.90 },\n  \"method\": \"ai_vision\",\n  \"nodeName\": \"Search Input\"\n}\n```\n\n**FAIL Example**:\n```json\n{\n  \"type\": \"VISION_CLASSIFY_RESULT\",\n  \"nodeId\": \"123:456\",\n  \"suggestedComponentType\": \"unknown\",\n  \"componentTypeConfidence\": 0.65,\n  \"reasoning\": [\n    \"Ambiguous structure\",\n    \"No clear input container pattern\"\n  ],\n  \"gate\": \"FAIL\",\n  \"thresholds\": { \"pass\": 0.90 },\n  \"method\": \"local\",\n  \"nodeName\": \"Component 1\"\n}\n```\n\n---\n\n## 6. How to Run / Build / Deploy\n\n### Build\n\n```bash\nnpm run build\n```\n\nThis runs:\n1. `build-ui`: Copies `ui/ui.html` to `dist/ui.html`, generates `src/ui-inline.ts`\n2. `build-main`: Compiles `src/code.ts` to `dist/src/code.js` (esbuild)\n3. `typecheck`: TypeScript type checking (no emit)\n\n### Development\n\n```bash\n# Watch UI changes\nnpm run dev:ui\n\n# Build only\nnpm run build-ui\nnpm run build-main\n```\n\n### Testing in Figma\n\n1. Open Figma Desktop\n2. Plugins → Development → Import plugin from manifest\n3. Select `manifest.json` from project root\n4. Plugin appears in Plugins menu\n5. Run plugin, select a node, click \"Accessible it\"\n\n### Deployment\n\n**Not yet implemented** - MVP is local development only.\n\n**Future**: Deploy to Figma Community (requires plugin approval process).\n\n---\n\n## 7. Definition of Done Summary\n\n**Source**: `Definition_Of_Done.md`\n\n### Build & Runtime\n- ✅ `npm run build` completes successfully\n- ✅ Plugin loads in Figma Desktop without errors\n- ✅ No unsupported JavaScript features in compiled output\n- ✅ `figma.showUI` receives valid HTML\n\n### MVP: Text Field E2E (Current Focus)\n\n**Selection → Preview**:\n- ✅ Preview exports as PNG at natural size (no upscale)\n- ✅ Transparent background\n- ✅ Preview renders correctly in UI\n\n**Component Detection**:\n- ✅ Multi-signal classification runs\n- ✅ Confidence gate: `confidence >= 0.90 AND structureScore >= 0.35`\n- ✅ Auto-resolve: climb parent tree up to 3 levels if FAIL\n- ✅ Returns `componentType: \"textField\"` or `\"unknown\"`\n\n**ASK Flow**:\n- ✅ If PASS: auto-filled, user can review/adjust\n- ✅ If FAIL: manual chips + input\n- ✅ `ASK_START` message sent with `source: \"auto\"` or `\"manual\"`\n\n**Scan Rules** (TF-01..TF-14):\n- ❌ **NOT IMPLEMENTED** - Placeholder only\n\n**Autofix**:\n- ❌ **NOT IMPLEMENTED** - Placeholder only\n\n**Handoff**:\n- ❌ **NOT IMPLEMENTED** - Placeholder only\n\n### Error Handling\n- ✅ Runtime errors surfaced to UI\n- ✅ User always gets feedback\n- ✅ No silent failures\n\n### UI Accessibility\n- ✅ Status updates via `aria-live`\n- ✅ Icon-only buttons have accessible names\n- ✅ Keyboard navigation works\n\n### Designer Experience\n- ✅ Plugin doesn't modify layout unexpectedly\n- ✅ Risky fixes are suggestions only\n- ✅ User understands what changed and why\n\n---\n\n## 8. Open TODOs (Finish MVP)\n\n### Critical (Block MVP Completion)\n\n1. **Scan Rules Implementation** (`src/code.ts`)\n   - Implement TF-01..TF-14 checks for Text Field\n   - All checks return WARN (no FAIL)\n   - Stream results to UI (`SCAN_PROGRESS` messages)\n   - Reference: `docs/03-components/mvp-rule-pack.docx`\n\n2. **Autofix Engine v1** (`src/code.ts`)\n   - Safe autofix (default ON):\n     - Rename layers (Input / Label / Helper / Icon / Container)\n     - Enforce min font sizes (body min 14, headings/labels 16) - WARN + suggestion only\n     - Create Focus state variant when missing\n     - Add annotation metadata (plugin data)\n   - Reference: `docs/01-foundations/foundations-engine-logic.docx`\n\n3. **Handoff Generator** (`src/code.ts`)\n   - Design guidance (what to change in design)\n   - UX patterns (states, focus, error patterns)\n   - Code snippets (HTML/ARIA)\n   - Reference: `docs/03-components/mvp-rule-pack.docx`\n\n4. **ASK Flow Completion** (`src/code.ts`, `ui/ui.html`)\n   - Scan-level ASK (not just component type)\n   - Template-based questions\n   - User responses stored and applied\n\n### High Priority (Before Launch)\n\n5. **Button/Checkbox/Dropdown Detectors Refinement**\n   - Improve confidence scoring\n   - Add negative gates (like checkbox has)\n   - Test on Design System pages\n\n6. **Test Scenarios Execution**\n   - Run all tests in `docs/02-project/test-scenarios.md`\n   - Document results\n   - Fix any failures\n\n7. **UI Polish**\n   - Preview zoom/pan bounds clamping (408x408)\n   - Theme toggle persistence\n   - Animation smoothness\n\n### Medium Priority (Post-MVP)\n\n8. **Post-MVP Components**\n   - Radio, Toggle/Switch, Link, Icon Button, Textarea, Search, Password, Date picker, Modal/Dialog, Toast/Alert\n   - Reference: `docs/02-project/Project-plan.md` section 10.2\n\n9. **Deployment**\n   - Figma Community submission\n   - Plugin store listing\n   - Documentation site\n\n---\n\n## 9. Key Documents Reference\n\n### Source of Truth (Locked)\n- `docs/01-foundations/foundations-engine-logic.docx`: Engine logic, AI Visual First, gates, schema\n- `docs/03-components/mvp-rule-pack.docx`: MVP component rules, checks, autofix boundaries, handoff\n\n### Master Plan\n- `docs/02-project/Project-plan.md`: Complete project plan, locked decisions, workstreams\n\n### Supporting Docs\n- `docs/02-project/test-scenarios.md`: Acceptance tests (15 test cases)\n- `docs/04-research/classifier-orchestrator-research.md`: Classifier architecture details\n- `docs/04-research/Runtime Accessibility Intent Catalog.md`: Runtime intents (filtered to MVP)\n- `docs/04-research/Design-Time Signals – Raw Extraction.md`: Signal extraction details\n\n### Code\n- `src/code.ts`: Main thread (classification, message handling)\n- `src/protocol.ts`: Message types and guards\n- `ui/ui.html`: UI thread (state machine, rendering)\n\n---\n\n## 10. Quick Reference: Locked Decisions\n\n| Decision | Value | Source |\n|----------|-------|--------|\n| AI Visual First | Default ON | Project-plan.md §5.1 |\n| Confidence Gate | 0.90 (strict) | Project-plan.md §5.3 |\n| Severity Policy | PASS/ASK/WARN only (no FAIL) | Project-plan.md §7 |\n| UI Shell | Static layout, uncertainty adds suggestions | Project-plan.md §10.4.1 |\n| Output Schema | Unified JSON contract | Project-plan.md §11.1 |\n| MVP Components | Text Field, Button, Checkbox, Dropdown | Project-plan.md §10.1 |\n\n---\n\n## 11. Common Questions\n\n**Q: Why is AI Vision default ON but sometimes uses local classifier?**  \nA: AI Vision requires OpenAI API key. If missing or API call fails, falls back to local classifier automatically.\n\n**Q: What's the difference between `suggestedComponentType` and `finalComponentType`?**  \nA: `suggestedComponentType` is what the classifier detected. `finalComponentType` is after user override (if any). Reasoning always uses `finalComponentType`.\n\n**Q: Why does DS context exclude certain component types?**  \nA: Design System pages have strong context signals. A \"Buttons\" page should never classify as Checkbox, even with weak icon signals. Hard-gating prevents misclassification.\n\n**Q: What happens if classification fails on selected node?**  \nA: Auto-resolve climbs parent tree (up to 3 levels) and re-runs classification. If parent passes gate, returns parent result with \"Auto-resolved\" in reasoning.\n\n**Q: How do I add a new component type?**  \nA: 1) Add detector function (e.g., `classifyRadioFromNodeTree()`), 2) Add to orchestrator in `classifyComponent()`, 3) Update protocol types, 4) Add to MVP rule pack.\n\n---\n\n## Immediate Execution Phase\n\n- [ ] Create Logic Rules for Text Field (TF-01 to TF-14).\n- [ ] Create Logic Rules for Button (BL-01 to BL-05).\n- [ ] Hook Logic into Orchestrator (src/code.ts).\n\n---\n\n## Immediate Phase: Core Architecture Repair\n\n--------------------------------------------------------------------------------\n🏗️ Epic 1: The Local Eye (Deep Structural Analysis)\nהמטרה: לגרום לפלאגין \"לראות\" את המבנה, לא רק לקרוא שמות.\n• 1.1 Signal Extraction Utilities:\n    ◦ מימוש פונקציות עזר (src/rules/utils.ts) שקוראות בטוח את ה-Allowed Signals: fills, strokes, effects, padding, layoutMode.\n    ◦ הגדרת פונקציית collectTreeHints(node) שמחזירה ספירת ילדים, סוגי ילדים (Vector/Text), והיררכיה.\n• 1.2 Component Detectors Refactoring:\n    ◦ שכתוב הדטקטורים (classifyTextField, classifyButton, וכו') כדי להשתמש בסיגנלים החדשים.\n    ◦ חוק: ביטול הסתמכות בלעדית על node.name. שם השכבה הוא רק סיגנל חלש (Weak Signal).\n    ◦ חוק: זיהוי Input חייב לכלול זיהוי קונטיינר (Frame/Group) + טקסט פנימי.\n🧠 Epic 2: The AI Vision Pipeline\nהמטרה: חיבור \"העיניים\" האמיתיות (OpenAI Vision).\n• 2.1 Image Export Pipeline:\n    ◦ מימוש exportAsync (PNG, 2x) על הנוד הנבחר לפני שליחה ל-AI.\n    ◦ שמירת התמונה כ-Base64 זמני (ללא שמירה בדיסק/localStorage).\n• 2.2 API Connection:\n    ◦ חיבור מלא של src/api/chat-proxy.ts לקבלת התמונה.\n    ◦ קבלת JSON מובנה מה-AI הכולל: componentType, confidence, intent.\n🎛️ Epic 3: The Orchestrator (Decision Fusion)\nהמטרה: המוח שמחליט למי להאמין (AI או Local).\n• 3.1 Fusion Logic Implementation:\n    ◦ אם AI Confidence > 0.90 -> קבל את ה-AI (Visual First).\n    ◦ אחרת -> הרץ Local Detectors.\n    ◦ אם שניהם נכשלים (< 0.70) -> החזר UNKNOWN.\n• 3.2 Conflict Resolution:\n    ◦ אם AI אומר \"Button\" וה-Local אומר \"Input\" (על בסיס מבנה מובהק) -> הצג ASK למשתמש.\n\n--------------------------------------------------------------------------------\n\n## Phase 5: Cost Optimization (The Local Eye)\n\n**Goal**: Reduce AI dependency by 80% using geometric and structural analysis.\n\n**Strategy Shift**: Move from \"AI Visual First\" to \"Local-First with AI Fallback\" to optimize token costs while maintaining accuracy.\n\n### Key Deliverable\nA local engine that can identify a \"Button\" or \"Input\" without sending pixels to OpenAI, using only:\n- Geometric fingerprints (dimensions, layout, spacing)\n- Structural analysis (children types, hierarchy, nesting)\n- Spatial relationships (label proximity, icon placement)\n- Negative signals (early exit rules)\n\n### Success Metrics\n- **Token Reduction**: 80% reduction in OpenAI API calls\n- **Accuracy**: Maintain >85% classification accuracy with local-only detection\n- **Performance**: Local detection completes in <50ms (vs 2-5s for AI Vision)\n\n### Implementation Approach\n1. **Research Phase**: Analyze 20 component types to extract common geometric/structural patterns\n2. **Signal Extraction**: Implement `collectNodeSignals()` to extract all allowed Figma API properties\n3. **Classifier Refactor**: Rewrite all classifiers to prioritize structural signals over name-based inference\n4. **Spatial Algorithms**: Implement label association, icon detection, and container pattern matching\n\n### Technical Foundation\n- **Allowed Signals**: Only use Figma API properties defined in `mvp-rule-pack-LOCKED.docx`\n- **No AI Dependency**: Local detection must work without any external API calls\n- **Confidence Scoring**: Maintain 0.90 gate threshold, but achieve it through local heuristics\n\n--------------------------------------------------------------------------------\n",
   "currentStatus": "# Current Rules Status\n\n**Last Updated**: 2025-12-29  \n**Purpose**: Track which rules are implemented vs pending\n\n---\n\n## Text Field Rules\n\n- TF-01: Type Detection ✅ Implemented\n- TF-02: Field Label ✅ Implemented\n- TF-03: Field Required ✅ Implemented\n- TF-04: Field Validation Focus ✅ Implemented\n- TF-05: Field Validations ✅ Implemented\n- TF-06: Field Context ✅ Implemented\n- TF-07: Field Placeholder ✅ Implemented\n- TF-08: Field Error Messages ✅ Implemented\n- TF-09: Field Help Text ✅ Implemented\n- TF-10: Field Keyboard Navigation ✅ Implemented\n- TF-11: Field Auto-complete ✅ Implemented\n- TF-12: Field Input Types ✅ Implemented\n- TF-13: Field Size Constraints ✅ Implemented\n- TF-14: Field Color Contrast ✅ Implemented\n\n**Total**: 14/14 implemented (100%)\n\n---\n\n## Button Rules\n\n- BL-01: Button Roles ✅ Implemented\n- BL-02: Button Labeling ✅ Implemented\n- BL-03: Button States ✅ Implemented\n- BL-04: Button Keyboard Navigation ✅ Implemented\n- BL-05: Button Focus Indicators ✅ Implemented\n\n**Total**: 5/5 implemented (100%)\n\n---\n\n## Checkbox Rules\n\n- CB-01: Checkbox Roles ✅ Implemented\n- CB-02: Checkbox Labeling ✅ Implemented\n- CB-03: Checkbox States ✅ Implemented\n\n**Total**: 3/3 implemented (100%)\n\n---\n\n## Select/Dropdown Rules\n\n- SC-01: Select Roles ✅ Implemented\n- SC-02: Select Labeling ✅ Implemented\n- SC-03: Select Keyboard Navigation ✅ Implemented\n\n**Total**: 3/3 implemented (100%)\n\n---\n\n## Overall Status\n\n**Total Rules**: 25  \n**Implemented**: 25  \n**Pending**: 0  \n**Coverage**: 100%\n\n---\n\n## Notes\n\n- All MVP rules (TF-01..TF-14, BL-01..BL-05, CB-01..CB-03, SC-01..SC-03) are fully implemented in `src/rules/`\n- Rules are wired into the orchestrator in `src/code.ts` via `classifyComponent`\n- All rules return WARN/ASK only (no FAIL/BLOCKER per MVP policy)\n- Evidence: `src/rules/textField.ts`, `src/rules/button.ts`, `src/rules/checkbox.ts`, `src/rules/dropdown.ts`\n",
   "truth": {
     "note": "Source of truth: Foundations + MVP rule pack. שאר המסמכים תומכים בלבד.",
@@ -710,25 +1306,5 @@
       "build:watch שמדפיס מה השתנה (UI/Main).",
       "deploy sanity: אימות path של manifest ל-dist/."
     ]
-  },
-  "architectureTasks": [
-    {
-      "id": "arch-01",
-      "name": "Bounded traversal with collectNodeSignals",
-      "status": "done",
-      "note": "Done as bounded traversal v1 (maxDepth=2). Selection normalization deferred."
-    },
-    {
-      "id": "arch-02",
-      "name": "Detector contract standardization",
-      "status": "done",
-      "note": "Done for all components"
-    },
-    {
-      "id": "arch-04",
-      "name": "AI Skip Gate / Fusion",
-      "status": "done",
-      "note": "Done as Fusion v1 (local-first AI skip, threshold 0.85). Not global arbitration."
-    }
-  ]
+  }
 }
