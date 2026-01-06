@@ -1083,7 +1083,7 @@
       {
         "id": "event-001",
         "type": "component_identified",
-        "timestamp": "2026-01-06T17:10:49.198Z",
+        "timestamp": "2026-01-06T21:12:19.366Z",
         "component": "textField",
         "confidence": 0.87,
         "method": "local"
@@ -1096,7 +1096,7 @@
         "component": "textField",
         "message": "TF-08 (Error Messages) not implemented",
         "severity": "medium",
-        "timestamp": "2026-01-06T17:10:49.198Z"
+        "timestamp": "2026-01-06T21:12:19.366Z"
       }
     ]
   },
@@ -1455,6 +1455,98 @@
       }
     ],
     "logEntries": [
+      {
+        "timestamp": "2026-01-06T21:11:09Z",
+        "type": "feature",
+        "message": "MVP Rule: 20 Checks Per Component - Button, TextField, Checkbox Implemented",
+        "phase": "phase3",
+        "files": [
+          "src/rules/button.ts",
+          "src/rules/textField.ts",
+          "src/rules/checkbox.ts"
+        ],
+        "verificationTests": [
+          {
+            "id": "MVP-20-BTN-01",
+            "date": "2026-01-06T21:11:09Z",
+            "description": "Button detector with 20 checks (13 positive, 7 negative)",
+            "expected": "All 20 checks implemented with IDs BTN-CHK-01 through BTN-CHK-20, checksFired array populated",
+            "result": {
+              "checksImplemented": 20,
+              "positiveChecks": 13,
+              "negativeChecks": 7,
+              "hardGates": 2,
+              "checksFired": [
+                "BTN-CHK-01",
+                "BTN-CHK-02",
+                "BTN-CHK-04",
+                "BTN-CHK-05",
+                "BTN-CHK-08",
+                "BTN-CHK-10"
+              ],
+              "status": "PASS",
+              "confidence": "0.0-1.0",
+              "outputContract": "confident, status, reasoning, breakdown, checksFired"
+            },
+            "status": "PASS",
+            "evidenceType": "implementation",
+            "notes": "Button detector upgraded to MVP 20-check system. All checks use NodeSignals only. Output includes checksFired array. Hard gates: BTN-CHK-01 (container), BTN-CHK-17 (aspect ratio > 10)."
+          },
+          {
+            "id": "MVP-20-TF-01",
+            "date": "2026-01-06T21:11:09Z",
+            "description": "TextField detector with 20 checks (13 positive, 7 negative)",
+            "expected": "All 20 checks implemented with IDs TF-CHK-01 through TF-CHK-20, checksFired array populated",
+            "result": {
+              "checksImplemented": 20,
+              "positiveChecks": 13,
+              "negativeChecks": 7,
+              "hardGates": 2,
+              "checksFired": [
+                "TF-CHK-01",
+                "TF-CHK-02",
+                "TF-CHK-04",
+                "TF-CHK-05",
+                "TF-CHK-07",
+                "TF-CHK-10"
+              ],
+              "status": "PASS",
+              "confidence": "0.0-1.0",
+              "outputContract": "confident, status, reasoning, breakdown, checksFired"
+            },
+            "status": "PASS",
+            "evidenceType": "implementation",
+            "notes": "TextField detector upgraded to MVP 20-check system. All checks use NodeSignals only. Output includes checksFired array. Hard gates: TF-CHK-01 (container), TF-CHK-14 (not container)."
+          },
+          {
+            "id": "MVP-20-CB-01",
+            "date": "2026-01-06T21:11:09Z",
+            "description": "Checkbox detector with 20 checks (13 positive, 7 negative)",
+            "expected": "All 20 checks implemented with IDs CB-CHK-01 through CB-CHK-20, checksFired array populated",
+            "result": {
+              "checksImplemented": 20,
+              "positiveChecks": 13,
+              "negativeChecks": 7,
+              "hardGates": 3,
+              "checksFired": [
+                "CB-CHK-01",
+                "CB-CHK-02",
+                "CB-CHK-03",
+                "CB-CHK-04",
+                "CB-CHK-06",
+                "CB-CHK-10"
+              ],
+              "status": "PASS",
+              "confidence": "0.0-1.0",
+              "outputContract": "confident, status, reasoning, breakdown, checksFired"
+            },
+            "status": "PASS",
+            "evidenceType": "implementation",
+            "notes": "Checkbox detector upgraded to MVP 20-check system. All checks use NodeSignals only. Output includes checksFired array. Hard gates: CB-CHK-01 (square aspect ratio), CB-CHK-13 (geometry available), CB-CHK-16 (corner radius < 45% for radio button exclusion)."
+          }
+        ],
+        "notes": "MVP Rule implementation: 3/20 components completed (Button, TextField, Checkbox). Each detector has exactly 20 checks (>=7 negative), uses NodeSignals only, includes checksFired array in output. Pattern established for remaining 17 components."
+      },
       {
         "timestamp": "2026-01-06T01:00:00Z",
         "type": "feature",
