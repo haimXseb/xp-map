@@ -4,8 +4,8 @@
 
 | קובץ | מיקום ב-repo | מיקום ב-dist | URL ב-GitHub Pages |
 |------|--------------|--------------|-------------------|
-| `dashboard-sync.json` | `/dashboard-sync.json` | `/dist/dashboard-sync.json` | `https://haimXseb.github.io/xp-map/dashboard-sync.json` |
-| `data/data.json` | `/data/data.json` | `/dist/data/data.json` | `https://haimXseb.github.io/xp-map/data/data.json` |
+| `dashboard-sync.json` | `/dashboard-sync.json` | `/dist/dashboard-sync.json` | `https://1haim.github.io/xp-map/dashboard-sync.json` |
+| `data/data.json` | `/data/data.json` | `/dist/data/data.json` | `https://1haim.github.io/xp-map/data/data.json` |
 | `public/dashboard-sync.json` | `/public/dashboard-sync.json` | `/dist/dashboard-sync.json` | (אותו URL) |
 | `public/data/data.json` | `/public/data/data.json` | `/dist/data/data.json` | (אותו URL) |
 
@@ -26,7 +26,7 @@
 - הוא מעתיק את הקבצים מ-`dashboard-sync.json` ו-`data/data.json` ל-`public/`
 - Vite בונה את הפרויקט ל-`dist/` (כולל העתקת `public/`)
 - GitHub Pages מגיש את `dist/` מה-artifact
-- URL: `https://haimXseb.github.io/xp-map/`
+- URL: `https://1haim.github.io/xp-map/`
 
 ---
 
@@ -38,21 +38,21 @@
 git log -1 --format="%ai %s" -- dashboard-sync.json data/data.json
 
 # ב-GitHub
-# לך ל: https://github.com/haimXseb/xp-map
+# לך ל: https://github.com/1haim/xp-map
 # לחץ על dashboard-sync.json → History
 # בדוק את התאריך של ה-commit האחרון
 ```
 
 ### 2️⃣ בדוק Console logs בדשבורד
 ```javascript
-// פתח DevTools Console בדשבורד: https://haimXseb.github.io/xp-map/
+// פתח DevTools Console בדשבורד: https://1haim.github.io/xp-map/
 // תראה:
 📡 Fetching data from GitHub API...
 ✅ Loaded data from GitHub API
 ```
 
 ### 3️⃣ בדוק תאריך "עודכן" בדשבורד
-- פתח: https://haimXseb.github.io/xp-map/
+- פתח: https://1haim.github.io/xp-map/
 - בדוק את התאריך שמופיע ב-"עודכן: YYYY-MM-DD"
 - השווה עם תאריך ה-commit של `dashboard-sync.json`
 

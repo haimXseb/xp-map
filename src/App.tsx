@@ -11,10 +11,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { loadProjectData, ProjectData } from "./data/loadData";
 import { HomeTab } from "./components/HomeTab";
-import { TasksTab } from "./components/TasksTab";
-import { LogsTab } from "./components/LogsTab";
-import { FilesTab } from "./components/FilesTab";
-import { ReasoningTab } from "./components/ReasoningTab";
+// Commander components
+import { CommanderOverview } from "./components/CommanderOverview";
+import { CommanderPhasesTab } from "./components/CommanderPhasesTab";
+import { CommanderComponentsTab } from "./components/CommanderComponentsTab";
+import { CommanderFixHandoffTab } from "./components/CommanderFixHandoffTab";
+import { CommanderUsabilityTab } from "./components/CommanderUsabilityTab";
+import { CommanderBadgesTab } from "./components/CommanderBadgesTab";
+import { CommanderProgressGraph } from "./components/CommanderProgressGraph";
+import { ThemeToggle } from "./components/ThemeToggle";
 
 // Helper functions
 function cn(...xs: Array<string | false | undefined | null>) {
@@ -243,7 +248,7 @@ function ProjectTreeScreen({ data }: { data: ProjectData }) {
 }
 
 export default function App() {
-  const [tab, setTab] = useState("home");
+  const [tab, setTab] = useState("commander-overview");
   const [data, setData] = useState<ProjectData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -252,6 +257,17 @@ export default function App() {
       setData(loadedData);
       setLoading(false);
     });
+  }, []);
+
+  // Listen for navigation events from CommanderOverview
+  useEffect(() => {
+    const handleNavigate = (e: CustomEvent) => {
+      setTab(e.detail);
+    };
+    window.addEventListener('navigate-tab', handleNavigate as EventListener);
+    return () => {
+      window.removeEventListener('navigate-tab', handleNavigate as EventListener);
+    };
   }, []);
 
   if (loading || !data) {
@@ -279,7 +295,8 @@ export default function App() {
             <div className="text-xl font-semibold">דשבורד הפרויקט</div>
             <div className="text-sm text-muted-foreground">כל מה שצריך לדעת – במקום אחד</div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
             <SoftBadge variant="outline">MVP: {data.meta.mvp}</SoftBadge>
             <SoftBadge>עודכן: {data.meta.updated}</SoftBadge>
           </div>
@@ -292,29 +309,42 @@ export default function App() {
             "rounded-2xl border border-white/20 bg-white/35 backdrop-blur-xl",
             "dark:bg-white/8 dark:border-white/10"
           )}>
-            <TabsTrigger value="home" onClick={() => setTab("home")} className="rounded-2xl">בית</TabsTrigger>
-            <TabsTrigger value="tasks" onClick={() => setTab("tasks")} className="rounded-2xl">משימות</TabsTrigger>
-            <TabsTrigger value="logs" onClick={() => setTab("logs")} className="rounded-2xl">לוגים</TabsTrigger>
-            <TabsTrigger value="files" onClick={() => setTab("files")} className="rounded-2xl">קבצים</TabsTrigger>
-            <TabsTrigger value="reasoning" onClick={() => setTab("reasoning")} className="rounded-2xl">ריזונינג</TabsTrigger>
+            <TabsTrigger value="commander-overview" onClick={() => setTab("commander-overview")} className="rounded-2xl">Overview</TabsTrigger>
+            <TabsTrigger value="commander-phases" onClick={() => setTab("commander-phases")} className="rounded-2xl">Phases</TabsTrigger>
+            <TabsTrigger value="commander-components" onClick={() => setTab("commander-components")} className="rounded-2xl">Components & Checks</TabsTrigger>
+            <TabsTrigger value="commander-fix" onClick={() => setTab("commander-fix")} className="rounded-2xl">Fix & Handoff</TabsTrigger>
+            <TabsTrigger value="commander-usability" onClick={() => setTab("commander-usability")} className="rounded-2xl">Usability & Feedback</TabsTrigger>
+            <TabsTrigger value="commander-badges" onClick={() => setTab("commander-badges")} className="rounded-2xl">Badges</TabsTrigger>
+            {/* Legacy tabs */}
+            <TabsTrigger value="home" onClick={() => setTab("home")} className="rounded-2xl">בית (Legacy)</TabsTrigger>
             <TabsTrigger value="tree" onClick={() => setTab("tree")} className="rounded-2xl">עץ פרויקט</TabsTrigger>
           </TabsList>
+          {/* Commander tabs */}
+          <TabsContent value="commander-overview" activeValue={tab} className="mt-6">
+            <div className="grid gap-6">
+              <CommanderOverview data={data} />
+              <CommanderProgressGraph data={data} />
+            </div>
+          </TabsContent>
+          <TabsContent value="commander-phases" activeValue={tab} className="mt-6">
+            <CommanderPhasesTab data={data} />
+          </TabsContent>
+          <TabsContent value="commander-components" activeValue={tab} className="mt-6">
+            <CommanderComponentsTab data={data} />
+          </TabsContent>
+          <TabsContent value="commander-fix" activeValue={tab} className="mt-6">
+            <CommanderFixHandoffTab data={data} />
+          </TabsContent>
+          <TabsContent value="commander-usability" activeValue={tab} className="mt-6">
+            <CommanderUsabilityTab data={data} />
+          </TabsContent>
+          <TabsContent value="commander-badges" activeValue={tab} className="mt-6">
+            <CommanderBadgesTab data={data} />
+          </TabsContent>
+          {/* Legacy tabs */}
           <TabsContent value="home" activeValue={tab} className="mt-6">
             <HomeTab data={data} />
           </TabsContent>
-          <TabsContent value="tasks" activeValue={tab} className="mt-6">
-            <TasksTab data={data} />
-          </TabsContent>
-          <TabsContent value="logs" activeValue={tab} className="mt-6">
-            <LogsTab data={data} />
-          </TabsContent>
-          <TabsContent value="files" activeValue={tab} className="mt-6">
-            <FilesTab data={data} />
-          </TabsContent>
-          <TabsContent value="reasoning" activeValue={tab} className="mt-6">
-            <ReasoningTab data={data} />
-          </TabsContent>
-          {/* Dashboard merged into Home */}
           <TabsContent value="tree" activeValue={tab} className="mt-6">
             <ProjectTreeScreen data={data} />
           </TabsContent>

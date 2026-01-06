@@ -134,8 +134,8 @@ npm run build
 ## קישורים
 
 - **figma-oz repo:** https://github.com/haimXseb/figma-oz
-- **xp-map repo:** https://github.com/haimXseb/xp-map
-- **Dashboard (אחרי deploy):** https://haimXseb.github.io/xp-map/dashboard/
+- **xp-map repo:** https://github.com/1haim/xp-map
+- **Dashboard (אחרי deploy):** https://1haim.github.io/xp-map/
 
 ## הערות חשובות
 

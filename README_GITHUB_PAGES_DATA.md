@@ -32,8 +32,8 @@ xp-map/
 ### 1️⃣ GitHub API (ברירת מחדל) - תמיד מעודכן
 ```typescript
 // src/data/loadData.ts
-fetchFromGitHub('dashboard-sync.json')      // ← קורא מ: https://raw.githubusercontent.com/haimXseb/xp-map/main/dashboard-sync.json
-fetchFromGitHub('data/data.json')          // ← קורא מ: https://raw.githubusercontent.com/haimXseb/xp-map/main/data/data.json
+fetchFromGitHub('dashboard-sync.json')      // ← קורא מ: https://raw.githubusercontent.com/1haim/xp-map/main/dashboard-sync.json
+fetchFromGitHub('data/data.json')          // ← קורא מ: https://raw.githubusercontent.com/1haim/xp-map/main/data/data.json
 ```
 
 **זה המקור העיקרי** - תמיד מעודכן כי הוא קורא ישירות מה-repository.
@@ -75,9 +75,9 @@ fetchFromGitHub('data/data.json')          // ← קורא מ: https://raw.githu
 
 ### Base Path:
 - **Vite config:** `base: '/xp-map/'`
-- **URL:** `https://haimXseb.github.io/xp-map/`
-- **Assets:** `https://haimXseb.github.io/xp-map/assets/...`
-- **Data files:** `https://haimXseb.github.io/xp-map/dashboard-sync.json`
+- **URL:** `https://1haim.github.io/xp-map/`
+- **Assets:** `https://1haim.github.io/xp-map/assets/...`
+- **Data files:** `https://1haim.github.io/xp-map/dashboard-sync.json`
 
 ---
 
@@ -154,7 +154,7 @@ const url = `https://raw.githubusercontent.com/${XP_MAP_REPO}/${BRANCH}/${path}?
 git log -1 --format="%ai %s" -- dashboard-sync.json data/data.json
 
 # ב-GitHub
-# לך ל: https://github.com/haimXseb/xp-map
+# לך ל: https://github.com/1haim/xp-map
 # לחץ על dashboard-sync.json → History
 # בדוק את התאריך של ה-commit האחרון
 ```
@@ -172,7 +172,7 @@ git log -1 --format="%ai %s" -- dashboard-sync.json data/data.json
 ```
 
 #### 3️⃣ בדוק את תאריך "עודכן" בדשבורד:
-- פתח את הדשבורד: https://haimXseb.github.io/xp-map/
+- פתח את הדשבורד: https://1haim.github.io/xp-map/
 - בדוק את התאריך שמופיע ב-"עודכן: YYYY-MM-DD"
 - השווה עם תאריך ה-commit של `dashboard-sync.json`
 
@@ -209,7 +209,7 @@ git log -1 --format="%ai %s" -- dashboard-sync.json data/data.json
    ls -la dist/dashboard-sync.json dist/data/data.json
    ```
 2. בדוק שה-workflow רץ בהצלחה:
-   - לך ל: https://github.com/haimXseb/xp-map/actions
+   - לך ל: https://github.com/1haim/xp-map/actions
    - בדוק שה-last workflow run הצליח
 
 ### בעיה: נתונים ישנים
@@ -235,7 +235,7 @@ git log -1 --format="%ai %s" -- dashboard-sync.json data/data.json
 - **Source:** `GitHub Actions`
 - **Branch:** `main` (אוטומטי מה-workflow)
 - **Folder:** `dist/` (מה-artifact)
-- **URL:** `https://haimXseb.github.io/xp-map/`
+- **URL:** `https://1haim.github.io/xp-map/`
 
 ### צ'ק ליסט אימות:
 1. ✅ בדוק תאריך commit של קבצי JSON

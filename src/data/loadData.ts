@@ -7,7 +7,7 @@
  * 3. Fallback to default data
  */
 
-const XP_MAP_REPO = 'haimXseb/xp-map';
+const XP_MAP_REPO = '1haim/xp-map';
 const BRANCH = 'main';
 
 export interface ExecutionLog {
@@ -56,6 +56,53 @@ export interface ExecutionLog {
     relatedFiles: string[];
     phase: string;
   }>;
+}
+
+// New Commander structure (from figma-oz)
+export interface Pillar {
+  id: string;
+  name: string;
+  description?: string;
+  progress: {
+    total: number;
+    completed: number;
+    percentage: number;
+  };
+}
+
+export interface Component {
+  id: string;
+  name: string;
+  type: string;
+  status: 'locked' | 'in-progress' | 'unlocked';
+  checks: ComponentCheck[];
+}
+
+export interface ComponentCheck {
+  id: string;
+  name: string;
+  group: string;
+  status: 'pass' | 'fail' | 'warning' | 'missing';
+  evidence?: string;
+  testSuggestions?: string[];
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  status: 'locked' | 'in-progress' | 'unlocked';
+  progress: number; // 0-5 (5 pips)
+  checklist: string[];
+  unlockedAt?: string;
+}
+
+export interface Capability {
+  id: string;
+  name: string;
+  status: 'pending' | 'in-progress' | 'done';
+  verifyLink?: string;
+  description?: string;
 }
 
 export interface ProjectData {
@@ -124,6 +171,7 @@ export interface ProjectData {
       implemented: number;
       percentage: number;
     };
+    pillars?: Pillar[]; // New: pillars progress
   };
   notifications?: Array<{
     id: string;
@@ -133,6 +181,12 @@ export interface ProjectData {
     timestamp: string;
     read: boolean;
   }>;
+  // New Commander fields (optional, will be populated from figma-oz)
+  pillars?: Pillar[];
+  components?: Component[];
+  badges?: Badge[];
+  capabilities?: Capability[];
+  currentPillar?: string; // Current active pillar ID
   sync?: {
     metadata: {
       lastUpdated: string;
@@ -276,8 +330,8 @@ export async function loadProjectData(): Promise<ProjectData> {
     if (local.data) {
       cachedData = {
         ...local.data,
-        sync: local.sync
-      };
+        sync: local.sync || undefined
+      } as ProjectData;
       console.log('✅ Loaded data from local files');
       return cachedData;
     }
@@ -296,7 +350,7 @@ function getDefaultData(): ProjectData {
       name: "OZ – Design-Time Accessibility Assistant",
       updated: new Date().toISOString().split('T')[0],
       mvp: "Text Field – E2E",
-      repo: "github.com/haimXseb/xp-map",
+      repo: "github.com/1haim/xp-map",
     },
     truth: {
       note: "Source of truth: Foundations + MVP rule pack. שאר המסמכים תומכים בלבד.",

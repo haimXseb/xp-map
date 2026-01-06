@@ -31,4 +31,4 @@ npm run preview  # לבדיקה מקומית
 ## קישורים
 
 - **figma-oz:** https://github.com/haimXseb/figma-oz
-- **Dashboard:** https://haimXseb.github.io/xp-map/dashboard/ (אחרי deploy)
+- **Dashboard:** https://1haim.github.io/xp-map/ (אחרי deploy)
