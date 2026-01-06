@@ -15,8 +15,6 @@ import {
   CartesianGrid,
 } from "recharts";
 import { ProjectData, ExecutionLog } from '../data/loadData';
-import { useToast } from '@/hooks/useToast';
-import { ToastContainer } from '@/components/Toast';
 import { cn } from '@/lib/utils';
 
 function pct(n: number) {
@@ -254,7 +252,6 @@ export function HomeTab({ data }: { data: ProjectData }) {
   const executionLog = data.executionLog;
   const gitStatus = data.gitStatus;
   const progress = data.progress;
-  const toast = useToast();
   
   // Pipeline checklist (from DashboardScreen)
   const pipelineIds = data.pipeline?.map((p) => p.id) || [];
@@ -356,9 +353,8 @@ export function HomeTab({ data }: { data: ProjectData }) {
       <div className="fixed top-4 left-4 z-50">
         <Button
           variant="secondary"
-          size="icon"
           className={cn(
-            "relative rounded-full w-12 h-12 border border-white/25 bg-white/45 backdrop-blur-xl",
+            "relative rounded-full w-12 h-12 p-0 border border-white/25 bg-white/45 backdrop-blur-xl",
             "hover:bg-white/55 dark:bg-white/10 dark:border-white/10",
             "transition-all duration-200 hover:scale-105 shadow-lg"
           )}
@@ -390,9 +386,8 @@ export function HomeTab({ data }: { data: ProjectData }) {
               <div className="flex items-center justify-between p-4 border-b border-white/20">
                 <h2 className="text-xl font-semibold">נוטיפיקציות</h2>
                 <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full"
+                  variant="secondary"
+                  className="rounded-full w-8 h-8 p-0"
                   onClick={() => setNotificationsOpen(false)}
                 >
                   <X className="w-5 h-5" />
