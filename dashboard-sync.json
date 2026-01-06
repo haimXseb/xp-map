@@ -1,24 +1,25 @@
 {
   "metadata": {
     "version": "1.0",
-    "lastUpdated": "2025-12-30T01:52:53.252Z",
+    "lastUpdated": "2026-01-06T17:10:49.159Z",
     "description": "קובץ מרכזי לסינכרון בין הפרויקט לדשבורד. Cursor מעדכן את הקובץ הזה, script דוחף לדשבורד.",
     "syncScript": "node dashboard-sync/sync-to-dashboard.cjs"
   },
   "project": {
     "name": "OZ – Design-Time Accessibility Assistant",
     "mvp": "Text Field – E2E",
-    "repo": "github.com/haimXseb/figma-oz",
-    "currentPhase": "phase4",
-    "currentGoal": "Wiring - Fixing engine wired: Rules connected to orchestrator, Plan View implemented, Autofix triggered from UI",
+    "repo": "github.com/1haim/figma-oz",
+    "currentPhase": "Phase 3.3: Scale to 10 Components",
+    "currentGoal": "Phase 3: Ambiguity Handling + Selection Normalization + Rollout to 10 Components",
     "buildCommand": "npm run build",
-    "scope": "Text Field בלבד"
+    "scope": "Text Field בלבד",
+    "currentPillar": "scan"
   },
   "status": {
     "blockers": [],
-    "lastContextDump": "2025-12-30T01:52:49.921Z",
+    "lastContextDump": "2026-01-06T02:05:10.665Z",
     "buildStatus": "success",
-    "lastBuild": "2025-12-30T01:52:53.253Z",
+    "lastBuild": "2026-01-06T17:10:49.159Z",
     "workingTree": "dirty",
     "branch": "main",
     "ahead": 0,
@@ -49,9 +50,120 @@
     "vision": {
       "enabledByDefault": false,
       "role": "Optional"
+    },
+    "aiSkipThreshold": {
+      "value": 0.85,
+      "description": "Skip AI Vision when TextField confidence >= 0.85 (85%)",
+      "location": "src/code.ts:843 (TF_PASS_THRESHOLD constant)"
+    }
+  },
+  "architecture": {
+    "detectorContract": {
+      "description": "All detectors must accept (node, signals) and return { confidence, reasoning, breakdown }",
+      "evidence": "src/rules/textField.ts, src/rules/button.ts, src/rules/checkbox.ts, src/rules/dropdown.ts, src/rules/radio.ts, src/rules/switch.ts, src/rules/badge.ts, src/rules/avatar.ts, src/rules/card.ts, src/rules/modal.ts"
+    },
+    "aiSkipGate": {
+      "threshold": 0.85,
+      "description": "Fusion v1 (local-first). Not global fusion.",
+      "location": "src/code.ts:843 (TF_PASS_THRESHOLD constant)",
+      "note": "Applies to all component types (TextField/Button/Checkbox/Dropdown/Radio/Switch/Badge/Avatar/Card/Modal) when confidence >= 0.85"
+    },
+    "traversal": {
+      "description": "collectNodeSignals bounded traversal (maxDepth=2)",
+      "evidence": "src/rules/utils.ts::collectNodeSignals",
+      "note": "Selection normalization planned for Phase 3."
+    },
+    "textFieldLogic": {
+      "sourceOfTruth": "src/rules/textField.ts",
+      "inlinedIn": "src/code.ts (classifyComponent function)",
+      "reason": "Figma plugin runtime does not support ES6 imports. Inline implementation mirrors src/rules/textField.ts::classifyTextFieldFromNodeTree logic.",
+      "note": "When updating TextField detection logic, update src/rules/textField.ts first, then sync to code.ts inline implementation."
     }
   },
   "recentUpdates": [
+    {
+      "timestamp": "2026-01-06T03:30:00Z",
+      "type": "feature",
+      "message": "Phase 3.3 — Scale to 10 Components: Added 6 new detectors (Radio, Switch, Badge, Avatar, Card, Modal) with extended NodeSignals (isCircleHint, hasImageFill, textCharLenSummary, effectsHint, hasOverlaySiblingHint). All detectors follow same contract, naming ≤0.10 cap, reactions NEVER decisive. Added tie-breakers: TB-RADIO, TB-AVATAR, TB-BADGE.",
+      "files": [
+        "src/rules/utils.ts",
+        "src/rules/radio.ts",
+        "src/rules/switch.ts",
+        "src/rules/badge.ts",
+        "src/rules/avatar.ts",
+        "src/rules/card.ts",
+        "src/rules/modal.ts",
+        "src/code.ts"
+      ]
+    },
+    {
+      "timestamp": "2026-01-06T01:10:00Z",
+      "type": "feature",
+      "message": "Phase 3.2 — Ambiguity Handling + Tie-Breakers: Added deterministic tie-breaker rules (TB-01 through TB-04) to resolve close confidence scores. Prevents component types from stealing wins from each other.",
+      "files": [
+        "src/code.ts"
+      ]
+    },
+    {
+      "timestamp": "2026-01-06T01:00:00Z",
+      "type": "feature",
+      "message": "Phase 3.1 — Selection Normalization: Added normalizeSelectionNode to handle nested TEXT/VECTOR selections. Users can now select text inside inputs or icons inside dropdowns and get correct classification.",
+      "files": [
+        "src/rules/utils.ts",
+        "src/code.ts"
+      ]
+    },
+    {
+      "timestamp": "2026-01-06T00:50:00Z",
+      "type": "phase_complete",
+      "message": "Phase 2 Complete — All core components (TextField, Button, Checkbox, Dropdown) standardized on NodeSignals",
+      "files": [
+        "src/rules/button.ts",
+        "src/rules/checkbox.ts",
+        "src/rules/dropdown.ts",
+        "src/code.ts"
+      ]
+    },
+    {
+      "timestamp": "2026-01-06T00:49:00Z",
+      "type": "feature",
+      "message": "AI Skip Gate — Fusion v1 active (local-first, threshold 0.85)",
+      "files": [
+        "src/code.ts"
+      ]
+    },
+    {
+      "timestamp": "2026-01-06T00:48:00Z",
+      "type": "planning",
+      "message": "Next Phase — Ambiguity handling, tie-breakers, selection normalization",
+      "files": []
+    },
+    {
+      "timestamp": "2026-01-04T08:30:00Z",
+      "type": "phase_complete",
+      "message": "Phase 1 Complete: Upgraded TextField detection to signal-based analysis. Replaced name-based detection with unified signal extraction (geometry, structure, styling, layout, content, instance). Added spatial label association and explainable debug output with scoring buckets (structure/geometry/styling/instance/spatial/states). TextField logic inlined in code.ts (mirrors src/rules/textField.ts) due to Figma plugin runtime ES6 import limitations - source of truth: src/rules/textField.ts",
+      "files": [
+        "src/rules/utils.ts",
+        "src/rules/textField.ts",
+        "src/code.ts"
+      ]
+    },
+    {
+      "timestamp": "2026-01-04T08:25:00Z",
+      "type": "testing",
+      "message": "Golden Tests: Test 1 (Generic Frame + stroke + left-aligned text) → TextField confidence 0.87 (PASS, AI skip). Test 2 (Outline button with centered text) → Button wins (TextField confidence 0.45, center alignment penalty). Test 3 (Input with label above) → TextField confidence 0.82 (spatial boost). All tests include debug payload with breakdown, signals, and TF-ID reasons.",
+      "files": [
+        "docs/EXECUTION_LOG.json"
+      ]
+    },
+    {
+      "timestamp": "2026-01-04T08:20:00Z",
+      "type": "configuration",
+      "message": "AI Skip Threshold: TF_PASS_THRESHOLD = 0.85 (85%). AI Vision skipped when winner === 'textField' AND confidence >= 0.85. Verified in code.ts:1227. Threshold defined as named constant (no magic numbers).",
+      "files": [
+        "src/code.ts"
+      ]
+    },
     {
       "timestamp": "2025-12-30T01:00:00Z",
       "type": "feature",
