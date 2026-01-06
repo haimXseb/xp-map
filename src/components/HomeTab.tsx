@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Bell, X } from 'lucide-react';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -342,20 +343,101 @@ export function HomeTab({ data }: { data: ProjectData }) {
     return executionLog.logEntries.slice(-5).reverse();
   }, [executionLog]);
   
-  // Show notifications from sync file
-  useEffect(() => {
-    if (data.notifications && data.notifications.length > 0) {
-      data.notifications.forEach((notif: any) => {
-        if (!notif.read) {
-          toast.showInfo(notif.title, notif.message);
-        }
-      });
-    }
-  }, [data.notifications, toast]);
+  // Notifications panel state
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const unreadCount = useMemo(() => {
+    if (!data.notifications) return 0;
+    return data.notifications.filter((n: any) => !n.read).length;
+  }, [data.notifications]);
   
   return (
     <div className="grid gap-6 p-6">
-      <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
+      {/* Notifications Button */}
+      <div className="fixed top-4 left-4 z-50">
+        <Button
+          variant="secondary"
+          size="icon"
+          className={cn(
+            "relative rounded-full w-12 h-12 border border-white/25 bg-white/45 backdrop-blur-xl",
+            "hover:bg-white/55 dark:bg-white/10 dark:border-white/10",
+            "transition-all duration-200 hover:scale-105 shadow-lg"
+          )}
+          onClick={() => setNotificationsOpen(!notificationsOpen)}
+        >
+          <Bell className="w-5 h-5" />
+          {unreadCount > 0 && (
+            <Badge className="absolute -top-1 -right-1 w-5 h-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 text-white">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </Badge>
+          )}
+        </Button>
+      </div>
+
+      {/* Notifications Side Panel */}
+      {notificationsOpen && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+            onClick={() => setNotificationsOpen(false)}
+          />
+          <div className={cn(
+            "fixed top-0 left-0 h-full w-96 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl",
+            "border-r border-white/25 shadow-2xl z-50",
+            "transition-transform duration-300",
+            notificationsOpen ? "translate-x-0" : "-translate-x-full"
+          )}>
+            <div className="flex flex-col h-full">
+              <div className="flex items-center justify-between p-4 border-b border-white/20">
+                <h2 className="text-xl font-semibold">נוטיפיקציות</h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full"
+                  onClick={() => setNotificationsOpen(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              <ScrollArea className="flex-1">
+                <div className="p-4 space-y-3">
+                  {data.notifications && data.notifications.length > 0 ? (
+                    data.notifications.map((notif: any, idx: number) => (
+                      <Card
+                        key={idx}
+                        className={cn(
+                          "p-4 transition-all duration-200 hover:scale-[1.02]",
+                          !notif.read && "border-blue-400/50 bg-blue-500/10"
+                        )}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <div className="font-semibold text-sm">{notif.title}</div>
+                            {notif.message && (
+                              <div className="mt-1 text-xs text-muted-foreground">{notif.message}</div>
+                            )}
+                            {notif.timestamp && (
+                              <div className="mt-2 text-xs text-muted-foreground">
+                                {new Date(notif.timestamp).toLocaleString('he-IL')}
+                              </div>
+                            )}
+                          </div>
+                          {!notif.read && (
+                            <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0 mt-1" />
+                          )}
+                        </div>
+                      </Card>
+                    ))
+                  ) : (
+                    <div className="text-center text-muted-foreground py-8">
+                      אין נוטיפיקציות
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+          </div>
+        </>
+      )}
       
       {/* Main Header - Merged from DashboardScreen */}
       <GlassCard>
@@ -458,7 +540,6 @@ export function HomeTab({ data }: { data: ProjectData }) {
                   checked={Boolean(checklist.state[p.id])}
                   onCheckedChange={() => {
                     checklist.toggle(p.id);
-                    toast.showSuccess("עודכן", `שלב ${p.title} עודכן`);
                   }}
                 />
                 <label htmlFor={`pipe-${p.id}`} className="w-full cursor-pointer">
@@ -475,7 +556,6 @@ export function HomeTab({ data }: { data: ProjectData }) {
                 className="rounded-2xl transition-all duration-200 hover:scale-105" 
                 onClick={() => {
                   checklist.setAll(true);
-                  toast.showSuccess("עודכן", "כל השלבים סומנו כ-Done");
                 }}
               >
                 סמן הכל Done
@@ -485,7 +565,6 @@ export function HomeTab({ data }: { data: ProjectData }) {
                 className="rounded-2xl transition-all duration-200 hover:scale-105" 
                 onClick={() => {
                   checklist.setAll(false);
-                  toast.showInfo("אופס", "כל השלבים אופסו");
                 }}
               >
                 איפוס
