@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "OZ – Design-Time Accessibility Assistant",
-    "updated": "2026-01-07",
+    "updated": "2026-01-08",
     "mvp": "Text Field – E2E",
     "repo": "github.com/1haim/figma-oz",
     "version": "2.0",
@@ -1083,7 +1083,7 @@
       {
         "id": "event-001",
         "type": "component_identified",
-        "timestamp": "2026-01-07T04:31:18.102Z",
+        "timestamp": "2026-01-08T22:54:43.768Z",
         "component": "textField",
         "confidence": 0.87,
         "method": "local"
@@ -1096,16 +1096,22 @@
         "component": "textField",
         "message": "TF-08 (Error Messages) not implemented",
         "severity": "medium",
-        "timestamp": "2026-01-07T04:31:18.102Z"
+        "timestamp": "2026-01-08T22:54:43.768Z"
       }
     ]
   },
   "executionLog": {
     "metadata": {
       "version": "1.0",
-      "lastUpdated": "2026-01-06T03:30:00Z",
-      "currentPhase": "Phase 3.3: Scale to 10 Components",
-      "currentGoal": "Phase 3: Ambiguity Handling + Selection Normalization + Rollout to 10 Components"
+      "lastUpdated": "2026-01-08T23:45:00Z",
+      "currentPhase": "Phase 3.4: Architecture Planning (Pre-v1.0)",
+      "currentGoal": "Define Engine v1.0 architecture, identify refactors, establish completion criteria",
+      "schema": {
+        "logEntry": {
+          "feedbackRefId": "optional string - reference ID for feedback entry",
+          "feedbackStatus": "optional 'none' | 'reported' | 'reviewed' - feedback status"
+        }
+      }
     },
     "blockers": [],
     "phases": [
@@ -1455,6 +1461,46 @@
       }
     ],
     "logEntries": [
+      {
+        "timestamp": "2026-01-08T23:45:00Z",
+        "type": "infrastructure_added",
+        "message": "Feedback capture infrastructure added: FeedbackPayload type, recordClassificationFeedback stub, checksFired in debug payload, nodeId/normalizedNodeId in classifyComponent return. No behavior changes - infrastructure-only.",
+        "phase": "phase3.4",
+        "files": [
+          "src/feedback.ts",
+          "src/code.ts",
+          "docs/EXECUTION_LOG.json"
+        ],
+        "evidenceType": "spec-only",
+        "feedbackStatus": "none",
+        "details": {
+          "infrastructureType": "feedback_capture",
+          "behaviorChange": false,
+          "components": {
+            "FeedbackPayload": "Type definition with detectedComponent, expectedComponent, confidence, checksFired, nodeId, normalizedNodeId, timestamp, userNote",
+            "recordClassificationFeedback": "Stub function (console.log only, no persistence)",
+            "classifyComponent": "Extended return type to include nodeId, normalizedNodeId, checksFired",
+            "debugPayload": "Added checksFired field",
+            "EXECUTION_LOG": "Schema updated with optional feedbackRefId and feedbackStatus fields"
+          }
+        }
+      },
+      {
+        "timestamp": "2026-01-07T17:45:00Z",
+        "type": "architecture_proposal",
+        "message": "Created ENGINE-V1-ARCHITECTURE.md: Final engine execution pipeline, architectural refactors needed, and Engine v1.0 completion criteria. Proposes 9-stage pipeline, hard-gate pre-filter, tie-breaker extraction, detector registry, and signal caching.",
+        "phase": "phase3.4",
+        "files": [
+          "docs/ENGINE-V1-ARCHITECTURE.md"
+        ],
+        "evidenceType": "spec-only",
+        "details": {
+          "pipelineStages": 9,
+          "refactorsIdentified": 4,
+          "componentsRemaining": 7,
+          "architectureStatus": "proposal"
+        }
+      },
       {
         "timestamp": "2026-01-07T03:00:00Z",
         "type": "task_completed",
