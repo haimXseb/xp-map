@@ -558,7 +558,22 @@
         "TF-13",
         "TF-14"
       ],
-      "wired": [],
+      "wired": [
+        "TF-01",
+        "TF-02",
+        "TF-03",
+        "TF-04",
+        "TF-05",
+        "TF-06",
+        "TF-07",
+        "TF-08",
+        "TF-09",
+        "TF-10",
+        "TF-11",
+        "TF-12",
+        "TF-13",
+        "TF-14"
+      ],
       "tested": [
         "TF-01",
         "TF-02",
@@ -585,7 +600,13 @@
         "BL-04",
         "BL-05"
       ],
-      "wired": [],
+      "wired": [
+        "BL-01",
+        "BL-02",
+        "BL-03",
+        "BL-04",
+        "BL-05"
+      ],
       "tested": [
         "BL-01",
         "BL-02",
@@ -601,7 +622,11 @@
         "CB-02",
         "CB-03"
       ],
-      "wired": [],
+      "wired": [
+        "CB-01",
+        "CB-02",
+        "CB-03"
+      ],
       "tested": [
         "CB-01",
         "CB-02",
@@ -615,7 +640,11 @@
         "SC-02",
         "SC-03"
       ],
-      "wired": [],
+      "wired": [
+        "SC-01",
+        "SC-02",
+        "SC-03"
+      ],
       "tested": [
         "SC-01",
         "SC-02",
@@ -629,7 +658,11 @@
         "RB-02",
         "RB-03"
       ],
-      "wired": [],
+      "wired": [
+        "RB-01",
+        "RB-02",
+        "RB-03"
+      ],
       "tested": [],
       "missing": []
     },
@@ -639,7 +672,11 @@
         "SW-02",
         "SW-03"
       ],
-      "wired": [],
+      "wired": [
+        "SW-01",
+        "SW-02",
+        "SW-03"
+      ],
       "tested": [],
       "missing": []
     },
@@ -1083,7 +1120,7 @@
       {
         "id": "event-001",
         "type": "component_identified",
-        "timestamp": "2026-01-09T20:42:24.507Z",
+        "timestamp": "2026-01-09T20:48:49.599Z",
         "component": "textField",
         "confidence": 0.87,
         "method": "local"
@@ -1096,7 +1133,7 @@
         "component": "textField",
         "message": "TF-08 (Error Messages) not implemented",
         "severity": "medium",
-        "timestamp": "2026-01-09T20:42:24.507Z"
+        "timestamp": "2026-01-09T20:48:49.599Z"
       }
     ]
   },
